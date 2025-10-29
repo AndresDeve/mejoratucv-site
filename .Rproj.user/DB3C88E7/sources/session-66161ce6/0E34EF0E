@@ -3,7 +3,7 @@
     "path": "~/Desktop/MejoráTuCV/mejoratucv_site_onepage/assets/js/script.js",
     "project_path": "assets/js/script.js",
     "type": "js",
-    "hash": "0",
+    "hash": "630012719",
     "contents": "",
     "dirty": false,
     "created": 1761414349703.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "629,3",
-        "scrollLine": "615"
+        "cursorPosition": "368,1",
+        "scrollLine": "353"
     },
     "folds": "",
-    "lastKnownWriteTime": 1761772011,
+    "lastKnownWriteTime": 1761775358,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1761772011,
+    "last_content_update": 1761775358289,
     "read_only": false,
     "read_only_alternatives": []
 }

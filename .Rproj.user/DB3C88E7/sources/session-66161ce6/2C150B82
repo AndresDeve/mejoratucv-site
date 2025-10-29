@@ -3,7 +3,7 @@
     "path": "~/Desktop/MejoráTuCV/mejoratucv_site_onepage/index.qmd",
     "project_path": "index.qmd",
     "type": "quarto_markdown",
-    "hash": "0",
+    "hash": "2490013327",
     "contents": "",
     "dirty": false,
     "created": 1758906526673.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "547,3",
-        "scrollLine": "541"
+        "cursorPosition": "476,6",
+        "scrollLine": "465"
     },
     "folds": "",
-    "lastKnownWriteTime": 1761772011,
+    "lastKnownWriteTime": 1761775028,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1761772011,
+    "last_content_update": 1761775028671,
     "read_only": false,
     "read_only_alternatives": []
 }

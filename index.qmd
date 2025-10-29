@@ -296,14 +296,14 @@ Curso de dirección técnica"></textarea>
           <div class="error" id="fileError_clasico" aria-live="polite"></div>
         </div>
 
-<div class="field mt-3">
-  <label for="usarFoto" class="label">¿Querés foto en el CV?</label>
+<div class="field mt-3 usar-foto-group" data-svc="clasico">
+  <label class="label">¿Querés foto en el CV?</label>
   <div class="toggle-buttons" role="radiogroup" aria-label="¿Querés foto en el CV?">
-    <input type="radio" id="foto-si" name="usarFoto" value="si" required>
-    <label for="foto-si" class="toggle">Sí</label>
+    <input type="radio" id="foto-si-clasico" name="usarFoto" value="si" required>
+    <label for="foto-si-clasico" class="toggle">Sí</label>
 
-    <input type="radio" id="foto-no" name="usarFoto" value="no">
-    <label for="foto-no" class="toggle">No</label>
+    <input type="radio" id="foto-no-clasico" name="usarFoto" value="no">
+    <label for="foto-no-clasico" class="toggle">No</label>
   </div>
 </div>
 
@@ -408,14 +408,14 @@ Músico y compositor argentino. Fusiono sofisticación armónica con una lírica
           <div class="error" id="fileError_redes" aria-live="polite"></div>
         </div>
 
-        <div class="field mt-3">
-  <label for="usarFoto" class="label">¿Querés foto en el CV?</label>
+<div class="field mt-3 usar-foto-group" data-svc="redes">
+  <label class="label">¿Querés foto en el CV?</label>
   <div class="toggle-buttons" role="radiogroup" aria-label="¿Querés foto en el CV?">
-    <input type="radio" id="foto-si" name="usarFoto" value="si" required>
-    <label for="foto-si" class="toggle">Sí</label>
+    <input type="radio" id="foto-si-redes" name="usarFoto" value="si" required>
+    <label for="foto-si-redes" class="toggle">Sí</label>
 
-    <input type="radio" id="foto-no" name="usarFoto" value="no">
-    <label for="foto-no" class="toggle">No</label>
+    <input type="radio" id="foto-no-redes" name="usarFoto" value="no">
+    <label for="foto-no-redes" class="toggle">No</label>
   </div>
 </div>
 
@@ -465,14 +465,14 @@ Músico y compositor argentino. Fusiono sofisticación armónica con una lírica
             <div class="error" id="fileError_web" aria-live="polite"></div>
           </div>
 
-<div class="field mt-3">
-  <label for="usarFoto" class="label">¿Querés foto en el CV?</label>
+<div class="field mt-3 usar-foto-group" data-svc="web">
+  <label class="label">¿Querés foto en el CV?</label>
   <div class="toggle-buttons" role="radiogroup" aria-label="¿Querés foto en el CV?">
-    <input type="radio" id="foto-si" name="usarFoto" value="si" required>
-    <label for="foto-si" class="toggle">Sí</label>
+    <input type="radio" id="foto-si-web" name="usarFoto" value="si" required>
+    <label for="foto-si-web" class="toggle">Sí</label>
 
-    <input type="radio" id="foto-no" name="usarFoto" value="no">
-    <label for="foto-no" class="toggle">No</label>
+    <input type="radio" id="foto-no-web" name="usarFoto" value="no">
+    <label for="foto-no-web" class="toggle">No</label>
   </div>
 </div>
 

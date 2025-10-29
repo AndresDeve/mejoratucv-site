@@ -322,48 +322,51 @@ const file = cvInput?.files?.[0] || null;
   }
 
   // Activar un único fieldset + un único attachment
-  function setFieldsetActive(fs, active){
-    if (!fs) return;
-    const fields = fs.querySelectorAll('input, textarea, select');
+function setFieldsetActive(fs, active){
+  if (!fs) return;
+  const fields = fs.querySelectorAll('input, textarea, select');
 
-    // Quitar name="attachment" fuera del activo
+  if (active) {
+    // Asegurá que no haya otros inputs file con name="attachment"
+    document.querySelectorAll('input[type="file"][name="attachment"]').forEach(inp=>{
+      if (!fs.contains(inp)) inp.removeAttribute('name');
+    });
+  }
+
+  fields.forEach(el => {
+    const type = (el.type || '').toLowerCase();
+
+    // Manejo de required
     if (active) {
-      document.querySelectorAll('input[type="file"][name="attachment"]').forEach(inp=>{
-        if (!fs.contains(inp)) inp.removeAttribute('name');
-      });
+      if (el.dataset.required === 'true') {
+        el.required = true;
+        delete el.dataset.required;
+      }
+    } else {
+      if (el.required) {
+        el.dataset.required = 'true';
+        el.required = false;
+      }
     }
 
-    fields.forEach(el => {
-      const type = (el.type || '').toLowerCase();
+    if (active){
+      if (!el.name && el.dataset.name) el.name = el.dataset.name;
+      // No tocar inputs file (sin name para evitar multipart)
+      el.disabled = false;
+    } else {
+      if (el.name) el.dataset.name = el.name;
+      if (type !== 'file') el.removeAttribute('name');
+      el.disabled = true;
 
-      // Required seguro
-      if (active) {
-        if (el.dataset.required === 'true') {
-          el.required = true;
-          delete el.dataset.required;
-        }
-      } else {
-        if (el.required) {
-          el.dataset.required = 'true';
-          el.required = false;
-        }
+      // 🚿 Extra: si es el grupo de "usarFoto" y ocultamos, desmarcamos
+      if (type === 'radio' && el.matches('input[name="usarFoto"]')) {
+        el.checked = false;
       }
+    }
+  });
 
-      if (active){
-  if (!el.name && el.dataset.name) el.name = el.dataset.name;
-  // ⛔ No setear name para inputs file (evita multipart)
-  if (type !== 'file') el.disabled = false;
-  else el.disabled = false; // usable pero sin name
-} else {
-  if (el.name) el.dataset.name = el.name;
-  // Podamos el name SOLO si no es file ni los hidden globales
-  if (type !== 'file') el.removeAttribute('name');
-  el.disabled = true;
+  fs.classList.toggle('hidden', !active);
 }
-    });
-
-    fs.classList.toggle('hidden', !active);
-  }
 
   function hideAllContent(){
     svcGroups.forEach(fs => setFieldsetActive(fs, false));
