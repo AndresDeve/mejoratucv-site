@@ -1,0 +1,19 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "MejoráTuCV"
+  favicon: assets/logo.png
+  navbar: false   # <— desactiva barra superior
+
+format:
+  html:
+    theme: default
+    css: styles.css
+    smooth-scroll: true
+    toc: false
+    page-layout: full
+    include-in-header:
+      text: |
+        <meta name="viewport" content="width=device-width, initial-scale=1">

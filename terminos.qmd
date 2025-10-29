@@ -1,0 +1,71 @@
+---
+page-layout: full
+body-class: terminos
+---
+
+<style>
+.mail-link {
+  color: #ffffff !important;        /* blanco por defecto */
+  text-decoration: underline;
+}
+.mail-link:hover,
+.mail-link:focus {
+  color: #FFD700 !important;        /* dorado al pasar el mouse */
+  text-decoration: none;
+}
+</style>
+
+<!-- Logo centrado -->
+<div style="text-align:center; margin-top:0.5rem; margin-bottom:1rem;">
+  <img src="assets/logo.png" alt="MejoráTuCV logo" style="max-height:150px;">
+</div>
+<div style="height:0.2rem;"></div>
+
+Al utilizar nuestros servicios, aceptás los siguientes términos y condiciones.
+
+## 1. Alcance del servicio
+
+-   Rediseñamos, optimizamos y adaptamos tu CV en **impresión, digital o web**.\
+-   Hasta **2 rondas de revisión**.\
+-   El cliente es responsable de la **veracidad** de los datos.
+
+## 2. Confidencialidad y privacidad
+
+-   Usamos tus datos **sólo** para procesar el pedido.\
+-   No compartimos con terceros sin consentimiento.\
+-   Eliminamos archivos a los **90 días** (salvo que solicites otra cosa).\
+-   Derechos de acceso/rectificación/eliminación: <a href="mailto:mejoratucv.contacto@gmail.com" class="mail-link">mejoratucv.contacto@gmail.com</a>
+
+## 3. Seguridad
+
+-   Aceptamos **PDF, DOCX, JPG, PNG**.\
+-   Escaneo básico de archivos.\
+-   No incluyas datos sensibles (DNI completo, cuentas, contraseñas).\
+-   Podés enviar ZIP con contraseña (clave por canal separado).
+
+## 4. Entregas y revisiones
+
+-   Enviamos **versión preliminar** y podés pedir cambios (hasta 2 rondas).\
+-   Plazos informados en la confirmación.\
+-   Entrega final por mail/WhatsApp (digital).
+
+## 5. Pagos y cancelaciones
+
+-   Pago por **plataformas oficiales** (p.ej., Mercado Pago).\
+-   Nunca pedimos datos de tarjeta por mail/WhatsApp.\
+-   Si no estás conforme tras la preliminar y revisiones, podés **cancelar antes de pagar**.\
+-   Tras pago y entrega final, no hay devoluciones.
+
+## 6. Propiedad intelectual
+
+-   Diseños para uso personal del cliente; plantillas/recursos de terceros con licencia.\
+-   Conservás los derechos de tu información y logotipos.
+
+## 7. Limitación de responsabilidad
+
+-   No garantizamos resultados laborales.\
+-   Nuestro compromiso es un documento de calidad.
+
+## 8. Contacto  
+
+Dudas: <a href="mailto:mejoratucv.contacto@gmail.com" class="mail-link">mejoratucv.contacto@gmail.com</a>

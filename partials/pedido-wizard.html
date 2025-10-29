@@ -1,0 +1,154 @@
+<!-- === Pedido: WIZARD 2 PASOS === -->
+<div class="card hero" id="pedido-wizard">
+  <div class="card-body">
+    <div class="wizard-header">
+      <h2><code>Formulario de pedido</code></h2>
+      <p class="subtitle"><em>*Campos obligatorios</em></p>
+
+      <!-- Indicador de progreso -->
+      <div class="progressbar" aria-hidden="true">
+        <div class="progress" id="progressFill" style="width:50%"></div>
+        <div class="steps">
+          <span class="dot active" id="dot1" aria-label="Paso 1"></span>
+          <span class="dot" id="dot2" aria-label="Paso 2"></span>
+        </div>
+      </div>
+      <p class="progress-label" id="progressLabel">Paso 1 de 2 — Datos básicos</p>
+    </div>
+
+    <form id="pedidoForm" action="https://formsubmit.co/mejoratucv.contacto@gmail.com" method="POST" class="contact-form" enctype="multipart/form-data" novalidate>
+
+      <!-- ========== PASO 1: Datos básicos ========== -->
+      <section class="wizard-step" data-step="1" aria-labelledby="step1-title">
+        <h3 id="step1-title" class="sr-only">Paso 1 — Datos básicos</h3>
+
+        <!-- Servicio como cards -->
+        <div class="label">*Seleccioná el servicio:</div>
+        <div class="service-cards" role="radiogroup" aria-label="Tipo de servicio">
+          <label class="svc">
+            <input type="radio" name="servicio" value="CV Clásico (30% OFF, $28.000 ARS)" required>
+            <div class="svc-body">
+              <h4>CV Clásico</h4>
+              <p>Para imprimir y compartir en alta calidad.</p>
+              <div class="price"><span class="off">30% OFF</span> $28.000</div>
+            </div>
+          </label>
+          <label class="svc">
+            <input type="radio" name="servicio" value="CV Redes (25% OFF, $22.500 ARS)" required>
+            <div class="svc-body">
+              <h4>CV Redes</h4>
+              <p>Para compartir por redes.</p>
+              <div class="price"><span class="off">25% OFF</span> $22.500</div>
+            </div>
+          </label>
+          <label class="svc">
+            <input type="radio" name="servicio" value="CV Web (20% OFF, $80.000 ARS)" required>
+            <div class="svc-body">
+              <h4>CV Web</h4>
+              <p>Sitio personal con proyectos y portfolio.</p>
+              <div class="price"><span class="off">20% OFF</span> $80.000</div>
+            </div>
+          </label>
+        </div>
+
+        <!-- Contacto rápido -->
+        <div class="contact-fields">
+          <div class="field">
+            <label for="nombre">*Tu nombre y apellido</label>
+            <input type="text" id="nombre" name="nombre" autocomplete="name" required>
+          </div>
+
+          <div class="field">
+            <label for="email">*Email</label>
+            <input type="email" id="email" name="_replyto" inputmode="email" autocomplete="email" required>
+          </div>
+
+          <div class="field">
+            <label for="whatsapp">*Contacto celular (WhatsApp)</label>
+            <input type="tel" id="whatsapp" name="whatsapp" placeholder="+54 9 294 123-4567" pattern="^[+0-9 ()-]{7,20}$" autocomplete="tel" required>
+          </div>
+        </div>
+
+        <div class="wizard-actions">
+          <button type="button" class="btn btn-primary next" id="toStep2">Continuar</button>
+        </div>
+      </section>
+
+      <!-- ========== PASO 2: Detalles del diseño ========== -->
+      <section class="wizard-step hidden" data-step="2" aria-labelledby="step2-title">
+        <h3 id="step2-title" class="sr-only">Paso 2 — Detalles del diseño</h3>
+
+        <!-- Estilo (checkboxes) -->
+        <div class="form-group" role="group" aria-labelledby="estiloLabel">
+          <div id="estiloLabel" class="label">*Estilo del CV</div>
+          <div class="help">Podés elegir más de una opción.</div>
+          <div class="checkbox-grid">
+            <label class="check"><input type="checkbox" name="aspiracion[]" value="corporativo" required><span>Corporativo / Ejecutivo</span></label>
+            <label class="check"><input type="checkbox" name="aspiracion[]" value="moderno"><span>Moderno / Creativo</span></label>
+            <label class="check"><input type="checkbox" name="aspiracion[]" value="academico"><span>Académico / Científico</span></label>
+            <label class="check"><input type="checkbox" name="aspiracion[]" value="minimalista"><span>Minimalista / Sobrio</span></label>
+            <label class="check"><input type="checkbox" name="aspiracion[]" value="personalizado"><span>Otro / Personalizado</span></label>
+          </div>
+          <div class="error" id="estiloError" aria-live="polite"></div>
+        </div>
+
+        <!-- Archivo: opcional con alternativa de enlace -->
+        <div class="form-group">
+          <label for="cvfile">Adjuntá tu CV actual — PDF/DOC/DOCX</label>
+          <div class="dropzone" id="dropzone" tabindex="0" aria-describedby="cvHelp">
+            <input type="file" id="cvfile" name="attachment" accept=".pdf,.doc,.docx">
+            <p>Arrastrá y soltá tu archivo acá o <span class="link">hacé clic para seleccionar</span></p>
+            <small id="cvHelp" class="file-note">Tamaño máx. 5 MB</small>
+            <div class="file-pill" id="filePill" hidden></div>
+          </div>
+          <div class="error" id="fileError" aria-live="polite"></div>
+
+          <label for="link_cv">También podés compartinos un enlace a tu CV actual</label>
+          <input type="url" id="link_cv" name="link_cv" placeholder="URL de LinkedIn / Google Drive (opcional)">
+        </div>
+
+        <!-- Foto en el CV -->
+        <div class="form-group">
+          <span class="label">*¿Querés que tu foto figure en el CV?</span>
+          <div class="radio-row">
+            <label class="radio"><input type="radio" name="usarFoto" value="si" required>Sí, quiero que aparezca mi foto</label>
+            <label class="radio"><input type="radio" name="usarFoto" value="no">No, prefiero sin foto</label>
+            <label class="radio"><input type="radio" name="usarFoto" value="indiferente">Indiferente / A criterio del diseñador</label>
+          </div>
+        </div>
+
+        <!-- Mensaje (final del Paso 2) -->
+        <div class="mensaje-block">
+          <label for="mensaje">Mensaje</label>
+          <textarea id="mensaje" name="mensaje" rows="5" maxlength="800" placeholder="Contanos cualquier aclaración o pedido adicional."></textarea>
+          <div class="counter" id="msgCounter" aria-live="polite">0/800</div>
+        </div>
+
+        <!-- Consentimiento -->
+        <div class="consent">
+          <label class="check">
+            <input type="checkbox" id="consentDatos" required>
+            <span>Acepto el uso de mis datos y leí los <a href="terminos.qmd" target="_blank" rel="noopener">*Términos y Condiciones</a>.</span>
+          </label>
+        </div>
+
+        <!-- Acciones -->
+        <div class="wizard-actions between">
+          <button type="button" class="btn secondary prev" id="backTo1">Volver</button>
+          <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Enviar</button>
+        </div>
+      </section>
+
+      <!-- Config ocultos FormSubmit -->
+      <input type="hidden" name="_subject" value="Pedido desde MejoráTuCV">
+      <input type="hidden" name="_captcha" value="true">
+      <input type="hidden" id="formStart" name="_formStart" value="">
+      <input type="hidden" name="_next" value="">
+      <input type="hidden" name="_autoresponse" value="¡Gracias por tu pedido! Te escribiremos por mail/WhatsApp en breve.">
+      <input type="hidden" name="_template" value="table">
+      <input type="text" name="_honey" style="display:none">
+    </form>
+
+    <div id="formStatus" class="status" role="status" aria-live="polite"></div>
+  </div>
+</div>

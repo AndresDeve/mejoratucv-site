@@ -1,0 +1,572 @@
+---
+image: assets/portada.png
+page-layout: full
+---
+
+<!-- Logo centrado -->
+<div style="text-align:center; margin-top:0.5rem; margin-bottom:1rem;">
+  <img src="assets/logo.png" alt="MejoráTuCV logo" style="max-height:150px;">
+</div>
+<div style="height:0.2rem;"></div>
+
+::: {.card .features style="font-size: 1.4rem;"}
+- Actualizá tu <span class="highlight-hand2">CV</span> con un diseño <span class="highlight-hand">moderno</span>. <div style="height:0.8rem;"></div>
+- Potenciá su <span class="highlight-hand">difusión</span> con el formato correcto de entrega:  `CV Clásico`  `CV Redes`  `CV Web`<div style="height:0.8rem;"></div>
+- Aprovechá los <span class="highlight-hand">descuentos</span> de lanzamiento <span class="offer-label">20–30% OFF</span>
+:::
+
+::: {.panel #inicio .features}
+## Diseños y Servicios
+
+<div class="services-grid">
+
+::: {.card}
+#### `CV Clásico`
+<p>
+  Diseños modernos y optimizados para <strong>imprimir y compartir en alta calidad</strong>.<br>
+  <span class="format-note">(Formato de entrega: PDF en alta calidad)</span>
+</p>
+
+
+:::{.slider #gallery-impresion}
+::: {=html}
+<button class="slider-btn prev" aria-label="Anterior">‹</button>
+:::
+
+::: {.slides}
+::: {.slide}
+![](assets/CV_Maradona.png){alt="Ejemplo CV 1" data-full="assets/CV_Maradona_full.png" tabindex="0" role="button"}
+:::
+::: {.slide}
+![](assets/CV_favaloro.png){alt="Ejemplo CV 2" tabindex="0" role="button"}
+:::
+::: {.slide}
+![](assets/CV_Houssay.png){alt="Ejemplo CV 2" tabindex="0" role="button"}
+:::
+::: {.slide}
+![](assets/CV_sparrow.png){alt="Ejemplo CV 3" tabindex="0" role="button"}
+:::
+:::
+
+::: {=html}
+<button class="slider-btn next" aria-label="Siguiente">›</button>
+:::
+:::
+
+<div class="price-box">
+  <span class="offer-label">30% OFF</span>
+  <span class="old-price">$40.000 ARS</span>
+  <span class="new-price">$28.000 ARS</span>
+</div>
+:::
+
+::: {.card}
+#### `CV Redes`
+<p>
+  Diseños minimalistas y optimizados para compartir desde tu <strong>celular</strong>, 
+  <strong>computadora</strong> o <strong>tablet</strong>.<br>
+  <span class="format-note">(Formato de entrega: PNG en alta calidad)</span>
+</p>
+
+:::{.slider #gallery-digital}
+::: {=html}
+<button class="slider-btn prev" aria-label="Anterior">‹</button>
+:::
+
+::: {.slides}
+::: {.slide}
+![](assets/CV_Digital_Maradona.png){alt="Ejemplo CV 1" data-full="assets/CV_Maradona_full.png" tabindex="0" role="button"}
+:::
+::: {.slide}
+![](assets/CV_charly_digital.png){alt="Ejemplo CV 2" tabindex="0" role="button"}
+:::
+:::
+
+::: {=html}
+<button class="slider-btn next" aria-label="Siguiente">›</button>
+:::
+:::
+
+<div class="price-box">
+  <span class="offer-label">25% OFF</span>
+  <span class="old-price">$30.000 ARS</span>
+  <span class="new-price">$22.500 ARS</span>
+</div>
+:::
+
+::: {.card}
+#### `CV Web`
+<p>
+  Un <strong>sitio web personal</strong> para mostrar tu <strong>CV</strong>, 
+  <strong>proyectos</strong> y <strong>portfolio</strong>.<br>
+  <span class="format-note">(Entrega: sitio web personalizado)</span>
+</p>
+
+```{=html}
+<figure class="cv-scroll-preview">
+  <div class="scroll-box">
+    <a href="cv-web-maradona/index.html" target="_blank">
+      <img src="assets/CV_Web_Maradona_preview.png" alt="Vista previa del CV Web de Maradona">
+    </a>
+  </div>
+</figure>
+```
+
+
+<div class="price-box">
+  <span class="offer-label">20% OFF</span>
+  <span class="old-price">$100.000 ARS</span>
+  <span class="new-price">$80.000 ARS</span>
+</div>
+:::
+
+</div>
+
+<p class="highlight-text">
+✨ Nuestros servicios son <strong>100% personalizados</strong> y <strong>sin IA</strong> ✨
+</p>
+:::
+
+::: {.workflow}
+## Tu pedido paso a paso
+
+:::{.workflow-cards}
+::: {.step-card}
+#### `Pedido`
+Completás el formulario de pedido.
+:::
+<div class="arrow">→</div>
+::: {.step-card}
+#### `Confirmación`
+Recibirás un mensaje con los detalles y plazos estimados.
+:::
+<div class="arrow">→</div>
+::: {.step-card}
+#### `Diseño preliminar`
+Recibirás una propuesta de CV para que la revises.
+:::
+<div class="arrow">→</div>
+::: {.step-card}
+#### `Revisión`
+Mantendremos 1 o 2 rondas de ajustes.
+:::
+<div class="arrow">→</div>
+::: {.step-card}
+#### `Diseño ajustado`
+Recibirás tu CV actualizado con tus ajustes.
+:::
+<div class="arrow">→</div>
+::: {.step-card}
+#### `Pago`
+Recibiras un mensaje con la orden de pago (Mercadopago).
+:::
+<div class="arrow">→</div>
+::: {.step-card}
+#### `Diseño final`
+Recibirás la versión final de tu CV por mail y WhatsApp.
+:::
+:::
+:::
+
+<div style="height:0.5rem;"></div>
+```{=html}
+<!-- === PEDIDO: WIZARD 2 PASOS (servicio+estilo+contenido → datos/envío) === -->
+<div class="card hero" id="pedido-wizard">
+  <div class="card-body">
+    <div class="wizard-header">
+      <h2><code>Formulario de pedido</code></h2>
+
+      <!-- Progreso (2 pasos) -->
+      <div class="progressbar" aria-hidden="true">
+        <div class="progress" id="progressFill" style="width:50%"></div>
+        <div class="steps">
+          <span class="dot active" id="dot1" aria-label="Paso 1"></span>
+          <span class="dot" id="dot2" aria-label="Paso 2"></span>
+        </div>
+      </div>
+      <p class="progress-label" id="progressLabel">Paso 1 de 2 — Servicio, estilo y contenido</p>
+    </div>
+
+<form id="pedidoForm"
+      action="https://script.google.com/macros/s/AKfycbz8IPSSaeWVe9njl7VPazjNh7efyvw4CZ-idkoBlZqmBPU7TOcmfzdifWlMwgpKwVJc/exec"
+      method="POST"
+      enctype="application/x-www-form-urlencoded"
+      class="contact-form">
+
+      <!-- ========== PASO 1: Servicio + Estilo + Contenido ========== -->
+<section class="wizard-step" data-step="1" aria-labelledby="step1-title">
+  <h3 id="step1-title" class="sr-only">Paso 1 — Servicio, estilo y contenido</h3>
+
+  <!-- Servicio -->
+  <h4 class="style-title">Seleccioná el servicio</h4>
+  <div class="service-cards" role="radiogroup" aria-label="Tipo de servicio" id="servicioGroup">
+    <label class="svc">
+      <input type="radio" name="servicio" value="cv_clasico" required>
+      <div class="svc-body">
+        <h4>CV Clásico (PDF)</h4>
+        <p>Para imprimir y compartir en alta calidad.</p>
+        <div class="price"><span class="off">30% OFF</span> $28.000</div>
+      </div>
+    </label>
+    <label class="svc">
+      <input type="radio" name="servicio" value="cv_redes" required>
+      <div class="svc-body">
+        <h4>CV Redes (PNG)</h4>
+        <p>Versión sintética para compartir por redes.</p>
+        <div class="price"><span class="off">25% OFF</span> $22.500</div>
+      </div>
+    </label>
+    <label class="svc">
+      <input type="radio" name="servicio" value="cv_web" required>
+      <div class="svc-body">
+        <h4>CV Web (Sitio)</h4>
+        <p>Sitio personal con proyectos y portfolio.</p>
+        <div class="price"><span class="off">20% OFF</span> $80.000</div>
+      </div>
+    </label>
+  </div>
+
+  <!-- Picker de estilos dinámico (se llena por JS según servicio elegido) -->
+  <div id="stylePicker" class="style-picker hidden" aria-live="polite">
+    <h4 class="style-title">Elegí el estilo</h4>
+    <div style="height:0.4rem;"></div>
+    <div id="styleGrid" class="style-grid"></div>
+    <!-- Guarda la elección de estilo (JS setea este valor) -->
+    <input type="hidden" id="estiloCard" name="estilo_elegido" value="">
+  </div>
+
+<!-- ===== Contenido (sección común + fieldsets por servicio) ===== -->
+<fieldset class="svc-fields hidden" id="content-clasico" data-for="cv_clasico">
+  <div class="card content-card">
+    <div class="card-body">
+      <h4 class="style-title">Contenido</h4>
+
+      <!-- === CAMPOS OBLIGATORIOS === -->
+      <label for="sobre_mi_clasico">Sobre mí</label>
+      <textarea id="sobre_mi_clasico" name="sobre_mi_clasico" rows="4" required
+        placeholder="Describite en 2–3 frases; ej: Futbolista profesional, director técnico e icono deportivo global. Liderazgo fuera y dentro de la cancha. Creativo e influencer. Experiencia en alto rendimiento, gestión de planteles, representación internacional y comunicación mediática."></textarea>
+
+      <label for="experiencia_clasico">Experiencia laboral</label>
+      <textarea id="experiencia_clasico" name="experiencia_clasico" rows="6" required
+        placeholder="Usá ítems cronológicos. Ejemplo:
+2008–2010 | SELECCIÓN ARGENTINA DE FÚTBOL
+Director técnico
+Conducción de la Selección Nacional en Eliminatorias y Mundial FIFA 2010"></textarea>
+
+      <label for="educacion_clasico">Educación y formación</label>
+      <textarea id="educacion_clasico" name="educacion_clasico" rows="4" required
+        placeholder="Ítems cronológicos. Ejemplo:
+1998–1999 | ASOCIACIÓN DEL FÚTBOL ARGENTINO (AFA)
+Curso de dirección técnica"></textarea>
+
+      <!-- === CAMPOS OPCIONALES === -->
+      <label for="web_clasico">Enlace a página personal <span class="optional"></span></label>
+      <input type="text" id="web_clasico" name="web_clasico"
+             placeholder="www.ejemplo.com" inputmode="url" autocomplete="url">
+
+      <label for="idiomas_clasico">Idiomas <span class="optional"></span></label>
+      <input type="text" id="idiomas_clasico" name="idiomas_clasico"
+             placeholder="Español, Italiano, Inglés">
+
+      <label for="premios_clasico">Premios y distinciones <span class="optional"></span></label>
+      <textarea id="premios_clasico" name="premios_clasico" rows="3"
+        placeholder="Listá premios, becas o distinciones relevantes. Ejemplo:
+2023 | Premio Konex – Trayectoria profesional
+2021 | Beca Fulbright – Investigación en EE.UU.
+2019 | Reconocimiento AFA al Mérito Deportivo"></textarea>
+
+      <label for="competencias_clasico">Competencias <span class="optional"></span></label>
+      <textarea id="competencias_clasico" name="competencias_clasico" rows="3"
+        placeholder="2–3 frases; ej: Cirugía cardiovascular avanzada. Innovación en técnicas quirúrgicas (bypass coronario). Investigación y publicaciones científicas internacionales. Dirección de instituciones médicas y académicas."></textarea>
+
+      <label for="capacidades_clasico">Capacidades relacionales y organizativas <span class="optional"></span></label>
+      <textarea id="capacidades_clasico" name="capacidades_clasico" rows="3"
+        placeholder="1–2 frases; ej: Liderazgo y capitanía de equipos. Comunicación carismática en medios y eventos públicos."></textarea>
+
+      <!-- ===== Bloque común (se muestra tras elegir estilo) ===== -->
+      <div class="contenido-comun hidden" id="contenido-comun-clasico">
+        <div class="form-group">
+          <label for="cvfile_clasico">Adjuntá tu CV actual — PDF/DOC/DOCX <span class="optional"></span></label>
+          <div class="dropzone" id="dropzone_clasico" tabindex="0" aria-describedby="cvHelp_clasico">
+            <input type="file" id="cvfile_clasico" accept=".pdf,.doc,.docx">
+            <p>Arrastrá y soltá tu archivo acá o <span class="link">hacé clic para seleccionar</span></p>
+            <small id="cvHelp_clasico" class="file-note">Tamaño máx. 5 MB</small>
+            <div class="file-pill" id="filePill_clasico" hidden></div>
+          </div>
+          <div class="error" id="fileError_clasico" aria-live="polite"></div>
+        </div>
+
+<div class="field mt-3">
+  <label for="usarFoto" class="label">¿Querés foto en el CV?</label>
+  <div class="toggle-buttons" role="radiogroup" aria-label="¿Querés foto en el CV?">
+    <input type="radio" id="foto-si" name="usarFoto" value="si" required>
+    <label for="foto-si" class="toggle">Sí</label>
+
+    <input type="radio" id="foto-no" name="usarFoto" value="no">
+    <label for="foto-no" class="toggle">No</label>
+  </div>
+</div>
+
+        <div class="mensaje-block">
+          <label for="mensaje_clasico">Mensaje <span class="optional"></span></label>
+          <textarea id="mensaje_clasico" name="mensaje_clasico" rows="5" maxlength="800"
+            placeholder="Contanos cualquier aclaración o pedido adicional."></textarea>
+          <div class="counter" id="msgCounter_clasico" aria-live="polite">0/800</div>
+        </div>
+      </div>
+      <!-- ===== Fin bloque común ===== -->
+    </div>
+  </div>
+</fieldset>
+
+  <fieldset class="svc-fields hidden" id="content-redes" data-for="cv_redes">
+  <div class="card content-card">
+    <div class="card-body">
+      <h4 class="style-title">Contenido</h4>
+
+      <!-- Titular -->
+      <label for="headline_redes">Titular</label>
+      <input
+        type="text"
+        id="headline_redes"
+        name="headline_redes"
+        required
+        maxlength="140"
+        placeholder="Definí tu trabajo en pocas palabras; ej.: Músico, compositor y productor"
+      >
+
+      <!-- Experiencia (bullets) -->
+      <label for="experiencia_redes">Experiencia (bullets)</label>
+      <textarea
+        id="experiencia_redes"
+        name="experiencia_redes"
+        rows="4"
+        placeholder="Incluí solo experiencia destacada en bullets; ej.:
+• Serú Girán (1978–1982) — Vocalista, tecladista y compositor principal"
+      ></textarea>
+
+      <!-- Habilidades (3–5 bullets) -->
+      <label for="habilidades_redes">Habilidades (3–5 bullets)</label>
+      <textarea
+        id="habilidades_redes"
+        name="habilidades_redes"
+        rows="4"
+        placeholder="3–5 habilidades en bullets; ej.:
+• Composición y arreglos musicales"
+      ></textarea>
+
+      <!-- Educación (bullets) -->
+      <label for="educacion_redes">Educación (bullets)</label>
+      <textarea
+        id="educacion_redes"
+        name="educacion_redes"
+        rows="3"
+        placeholder="Formación en bullets; ej.:
+• Conservatorio Thibaud Piazzini (1959–1965)"
+      ></textarea>
+
+      <!-- Sobre mí (2–3 frases) -->
+      <label for="sobre_mi_redes">Sobre mí (2–3 frases)</label>
+      <textarea
+        id="sobre_mi_redes"
+        name="sobre_mi_redes"
+        rows="4"
+        placeholder="Un resumen sobre tí; ej.:
+Músico y compositor argentino. Fusiono sofisticación armónica con una lírica crítica y poética, con trayectoria en grupos y carrera solista."
+      ></textarea>
+
+      <!-- Link personal -->
+      <label for="web_redes">Link personal</label>
+      <input
+        type="text"
+        id="web_redes"
+        name="web_redes"
+        inputmode="url"
+        autocomplete="url"
+        placeholder="www.ejemplo.com"
+      >
+
+      <!-- Ubicación -->
+      <label for="ubicacion_redes">Ubicación</label>
+      <input
+        type="text"
+        id="ubicacion_redes"
+        name="ubicacion_redes"
+        placeholder="Buenos Aires, Argentina"
+      >
+
+      <!-- ===== Bloque común (se muestra tras elegir estilo) ===== -->
+      <div class="contenido-comun hidden" id="contenido-comun-redes">
+        <div class="form-group">
+          <label for="cvfile_redes">Adjuntá tu CV actual — PDF/DOC/DOCX (opcional)</label>
+          <div class="dropzone" id="dropzone_redes" tabindex="0" aria-describedby="cvHelp_redes">
+            <input type="file" id="cvfile_redes" accept=".pdf,.doc,.docx">
+            <p>Arrastrá y soltá tu archivo acá o <span class="link">hacé clic para seleccionar</span></p>
+            <small id="cvHelp_redes" class="file-note">Tamaño máx. 5 MB</small>
+            <div class="file-pill" id="filePill_redes" hidden></div>
+          </div>
+          <div class="error" id="fileError_redes" aria-live="polite"></div>
+        </div>
+
+        <div class="field mt-3">
+  <label for="usarFoto" class="label">¿Querés foto en el CV?</label>
+  <div class="toggle-buttons" role="radiogroup" aria-label="¿Querés foto en el CV?">
+    <input type="radio" id="foto-si" name="usarFoto" value="si" required>
+    <label for="foto-si" class="toggle">Sí</label>
+
+    <input type="radio" id="foto-no" name="usarFoto" value="no">
+    <label for="foto-no" class="toggle">No</label>
+  </div>
+</div>
+
+        <div class="mensaje-block">
+          <label for="mensaje_redes">Mensaje</label>
+          <textarea
+            id="mensaje_redes"
+            name="mensaje_redes"
+            rows="5"
+            maxlength="800"
+            placeholder="Contanos cualquier aclaración o pedido adicional."
+          ></textarea>
+          <div class="counter" id="msgCounter_redes" aria-live="polite">0/800</div>
+        </div>
+      </div>
+      <!-- ===== Fin bloque común ===== -->
+    </div>
+  </div>
+</fieldset>
+
+  <fieldset class="svc-fields hidden" id="content-web" data-for="cv_web">
+    <div class="card content-card">
+      <div class="card-body">
+        <h4 class="style-title">Contenido</h4>
+
+        <label for="bio_web">Bio / Sobre mí (para el hero)</label>
+        <textarea id="bio_web" name="bio_web" rows="4"></textarea>
+
+        <label for="proyectos_web">Proyectos (nombre · breve descripción · enlace) — uno por línea</label>
+        <textarea id="proyectos_web" name="proyectos_web" rows="5"></textarea>
+
+        <label for="links_web">Enlaces principales (LinkedIn, GitHub, Behance, Portfolio)</label>
+        <input type="text" id="links_web" name="links_web" placeholder="URLs separadas por coma">
+
+        <label for="paleta_web">Preferencias de color/estilo</label>
+        <input type="text" id="paleta_web" name="paleta_web">
+
+        <div class="contenido-comun hidden" id="contenido-comun-web">
+          <div class="form-group">
+            <label for="cvfile_web">Adjuntá tu CV actual — PDF/DOC/DOCX (opcional)</label>
+            <div class="dropzone" id="dropzone_web" tabindex="0" aria-describedby="cvHelp_web">
+              <input type="file" id="cvfile_web" accept=".pdf,.doc,.docx">
+              <p>Arrastrá y soltá tu archivo acá o <span class="link">hacé clic para seleccionar</span></p>
+              <small id="cvHelp_web" class="file-note">Tamaño máx. 5 MB</small>
+              <div class="file-pill" id="filePill_web" hidden></div>
+            </div>
+            <div class="error" id="fileError_web" aria-live="polite"></div>
+          </div>
+
+<div class="field mt-3">
+  <label for="usarFoto" class="label">¿Querés foto en el CV?</label>
+  <div class="toggle-buttons" role="radiogroup" aria-label="¿Querés foto en el CV?">
+    <input type="radio" id="foto-si" name="usarFoto" value="si" required>
+    <label for="foto-si" class="toggle">Sí</label>
+
+    <input type="radio" id="foto-no" name="usarFoto" value="no">
+    <label for="foto-no" class="toggle">No</label>
+  </div>
+</div>
+
+          <div class="mensaje-block">
+            <label for="mensaje_web">Mensaje</label>
+            <textarea id="mensaje_web" name="mensaje_web" rows="5" maxlength="800"
+              placeholder="Contanos cualquier aclaración o pedido adicional."></textarea>
+            <div class="counter" id="msgCounter_web" aria-live="polite">0/800</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="wizard-actions">
+    <button type="button" class="btn btn-primary next" id="toStep2">Continuar</button>
+  </div>
+</section>
+
+      <!-- ========== PASO 2: Datos personales + envío ========== -->
+      <section class="wizard-step hidden" data-step="2" aria-labelledby="step2-title">
+  <h3 id="step2-title" class="sr-only">Paso 2 — Datos personales</h3>
+
+  <div class="contact-fields">
+    <div class="field">
+      <label for="nombre_final">Nombre y apellido</label>
+      <input type="text" id="nombre_final" name="nombre" autocomplete="name" required>
+    </div>
+
+    <div class="field">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" inputmode="email" autocomplete="email" required>
+    </div>
+
+    <div class="field">
+      <label for="whatsapp">WhatsApp (opcional)</label>
+      <input type="tel" id="whatsapp" name="whatsapp"
+             placeholder="+54 9 294 123-4567"
+             pattern="^[+0-9 ()-]{7,20}$"
+             autocomplete="tel">
+    </div>
+  </div>
+
+  <div class="consent">
+    <label class="check">
+      <input type="checkbox" id="consentDatos" name="consentimiento" value="acepto" required>
+      <span>Acepto el uso de mis datos y leí los
+        <a href="terminos.qmd" target="_blank" rel="noopener">Términos y Condiciones</a>.
+      </span>
+    </label>
+  </div>
+
+  <div class="wizard-actions between">
+    <button type="button" class="btn secondary prev" id="backTo1">Volver</button>
+    <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Enviar</button>
+  </div>
+</section>
+
+      <!-- Hidden FormSubmit -->
+      <input type="hidden" id="formStart" name="_formStart" value="">
+      <input type="hidden" name="_subject" value="Pedido desde MejoráTuCV">
+      <input type="hidden" name="_captcha" value="true">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_next" value="https://www.google.com/">
+      <input type="text" name="_honey" style="display:none">
+      <input type="hidden" name="fileName" id="fileName">
+      <input type="hidden" name="fileData" id="fileData">
+    </form>
+
+    <div id="formStatus" class="status" role="status" aria-live="polite"></div>
+  </div>
+</div>
+```
+
+
+::: {.footer-banner}
+<p>
+  Por dudas, escribinos a 
+  <a class="mail-link" href="mailto:mejoratucv.contacto@gmail.com?subject=Consulta%20puntual">
+    mejoratucv.contacto@gmail.com
+  </a>
+</p>
+:::
+
+<style>
+.mail-link {
+  color: #ffffff !important;        /* blanco por defecto */
+  text-decoration: underline;
+}
+.mail-link:hover,
+.mail-link:focus {
+  color: #FFD700 !important;        /* dorado al hover/focus */
+  text-decoration: none;
+}
+</style>
+
+<script src="assets/js/script.js" charset="utf-8"></script>
