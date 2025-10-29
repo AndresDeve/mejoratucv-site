@@ -1,8 +1,3 @@
 [build]
-  command = "quarto render"
+  command = "true"   # no construye nada; publica lo que ya existe
   publish = "_site"
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
