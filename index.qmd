@@ -105,7 +105,7 @@ page-layout: full
 ```{=html}
 <figure class="cv-scroll-preview">
   <div class="scroll-box">
-    <a href="cv-web-maradona/index.html" target="_blank">
+    <a href="https://maradona.mejoratucv.com.ar/" target="_blank">
       <img src="assets/CV_Web_Maradona_preview.png" alt="Vista previa del CV Web de Maradona">
     </a>
   </div>
