@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cv_clasico: [
         { value:'moderno',       caption:'Moderno',            img:'assets/CV_Maradona.png' },
         { value:'minimalista',   caption:'Minimalista/Sobrio', img:'assets/CV_favaloro.png' },
-        { value:'academico',     caption:'Académico',          img:'assets/CV_Houssay.png' },
+        { value:'academico',     caption:'Académico',          img:'assets/CV_houssay.png' },
         { value:'personalizado', caption:'Personalizado',      img:'assets/CV_sparrow.png' }
       ],
       cv_redes: [

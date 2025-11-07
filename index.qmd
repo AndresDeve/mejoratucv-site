@@ -75,7 +75,7 @@ btnShare?.addEventListener('click', (e) => {
 ![](assets/CV_favaloro.png){alt="Ejemplo CV 2" tabindex="0" role="button"}
 :::
 ::: {.slide}
-![](assets/CV_Houssay.png){alt="Ejemplo CV 2" tabindex="0" role="button"}
+![](assets/CV_houssay.png){alt="Ejemplo CV 2" tabindex="0" role="button"}
 :::
 ::: {.slide}
 ![](assets/CV_sparrow.png){alt="Ejemplo CV 3" tabindex="0" role="button"}
