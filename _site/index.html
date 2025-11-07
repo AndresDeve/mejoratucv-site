@@ -79,6 +79,34 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+<p><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"></p>
+<header class="cv-icons-top">
+  <a href="https://www.facebook.com/profile.php?id=61581557483042" target="_blank" aria-label="Facebook">
+    <i class="bi bi-facebook"></i>
+  </a>
+  <a href="#" id="btnShare" aria-label="Compartir esta página">
+    <i class="bi bi-share-fill"></i>
+  </a>
+  <a href="mailto:mejoratucv.contacto@gmail.com" aria-label="Email">
+    <i class="bi bi-envelope-fill"></i>
+  </a>
+</header>
+
+<script>
+const btnShare = document.getElementById('btnShare');
+
+btnShare?.addEventListener('click', (e) => {
+  e.preventDefault();
+  const pageUrl = encodeURIComponent(window.location.href);
+  const text = encodeURIComponent("¡Mirá mi CV web en " + window.location.href + "!");
+  
+  // Enlace directo a WhatsApp (funciona en desktop y móvil)
+  const whatsappUrl = `https://wa.me/?text=${text}`;
+  
+  // Abre WhatsApp en una nueva pestaña
+  window.open(whatsappUrl, '_blank');
+});
+</script>
 <!-- Logo centrado -->
 <div style="text-align:center; margin-top:0.5rem; margin-bottom:1rem;">
 <p><img src="assets/logo.png" alt="MejoráTuCV logo" style="max-height:150px;"></p>
@@ -98,6 +126,9 @@ ul.task-list li input[type="checkbox"] {
 </div></li>
 <li>Aprovechá los <span class="highlight-hand">descuentos</span> de lanzamiento <span class="offer-label">20–30% OFF</span></li>
 </ul>
+</div>
+<div style="height:0.2rem;">
+
 </div>
 <div id="inicio" class="panel features">
 <section id="diseños-y-servicios" class="level2">
@@ -172,13 +203,33 @@ Diseños minimalistas y optimizados para compartir desde tu <strong>celular</str
 <p>
 Un <strong>sitio web personal</strong> para mostrar tu <strong>CV</strong>, <strong>proyectos</strong> y <strong>portfolio</strong>.<br> <span class="format-note">(Entrega: sitio web personalizado)</span>
 </p>
-<figure class="cv-scroll-preview figure">
-  <div class="scroll-box">
-    <a href="https://maradona.mejoratucv.com.ar/" target="_blank">
-      <img src="assets/CV_Web_Maradona_preview.png" alt="Vista previa del CV Web de Maradona" class="figure-img">
-    </a>
+<div id="gallery-web" class="gallery-card">
+  <div class="slides">
+    <div class="slide">
+      <figure class="cv-scroll-preview figure">
+        <div class="scroll-box">
+          <a href="https://maradona.mejoratucv.com.ar/" target="_blank" rel="noopener">
+            <img src="assets/CV_Web_Maradona_preview.png" alt="Vista previa CV Web Maradona 1" class="figure-img">
+          </a>
+        </div>
+      </figure>
+    </div>
+
+    <div class="slide">
+      <figure class="cv-scroll-preview figure">
+        <div class="scroll-box">
+          <a href="https://maradona2.mejoratucv.com.ar/" target="_blank" rel="noopener">
+            <img src="assets/CV_Web_Maradona2_preview.png" alt="Vista previa CV Web Maradona 2" class="figure-img">
+          </a>
+        </div>
+      </figure>
+    </div>
   </div>
-</figure>
+
+  <!-- 👇 flecha izquierda añadida -->
+  <button class="slider-btn prev" aria-label="Anterior">‹</button>
+  <button class="slider-btn next" aria-label="Siguiente">›</button>
+</div>
 <div class="price-box">
 <p><span class="offer-label">20% OFF</span> <span class="old-price">$100.000 ARS</span> <span class="new-price">$80.000 ARS</span></p>
 </div>
@@ -236,11 +287,11 @@ Un <strong>sitio web personal</strong> para mostrar tu <strong>CV</strong>, <str
 </div>
 <section id="diseño-final" class="level4 step-card">
 <h4 class="anchored" data-anchor-id="diseño-final"><code>Diseño final</code></h4>
-<p>Recibirás la versión final de tu CV por mail y WhatsApp.</p>
+<p>Recibirás la versión final de tu CV por mail.</p>
 </section>
 </div>
 </section>
-<div style="height:0.5rem;">
+<div style="height:1.5rem;">
 
 </div>
 
@@ -261,7 +312,7 @@ Un <strong>sitio web personal</strong> para mostrar tu <strong>CV</strong>, <str
       <p class="progress-label" id="progressLabel">Paso 1 de 2 — Servicio, estilo y contenido</p>
     </div>
 
-<form id="pedidoForm" action="https://script.google.com/macros/s/AKfycbz8IPSSaeWVe9njl7VPazjNh7efyvw4CZ-idkoBlZqmBPU7TOcmfzdifWlMwgpKwVJc/exec" method="POST" enctype="application/x-www-form-urlencoded" class="contact-form">
+<form id="pedidoForm" action="https://script.google.com/macros/s/AKfycbyGn_3g2Z3TWvNEW0uWBF-Ez_xLvkZTjp2gu1QeH3ks25TKalFpdyV3CpdwUybaiz9o/exec" method="POST" enctype="application/x-www-form-urlencoded" class="contact-form" novalidate="">
 
       <!-- ========== PASO 1: Servicio + Estilo + Contenido ========== -->
 <section class="wizard-step" data-step="1" aria-labelledby="step1-title">
@@ -273,28 +324,40 @@ Un <strong>sitio web personal</strong> para mostrar tu <strong>CV</strong>, <str
     <label class="svc">
       <input type="radio" name="servicio" value="cv_clasico" required="">
       <div class="svc-body">
-        <h4 class="anchored">CV Clásico (PDF)</h4>
+        <h2 class="anchored">CV Clásico (PDF)</h2>
         <p>Para imprimir y compartir en alta calidad.</p>
         <div class="price"><span class="off">30% OFF</span> $28.000</div>
+        <div class="highlight-text2" data-svc="cv_clasico">
+  <span class="slots-label"><strong><span id="slots_clasico">—</span></strong> pedidos disponibles esta semana</span>
+</div>
       </div>
     </label>
     <label class="svc">
       <input type="radio" name="servicio" value="cv_redes" required="">
       <div class="svc-body">
-        <h4 class="anchored">CV Redes (PNG)</h4>
+        <h2 class="anchored">CV Redes (PNG)</h2>
         <p>Versión sintética para compartir por redes.</p>
         <div class="price"><span class="off">25% OFF</span> $22.500</div>
+        <div class="highlight-text2" data-svc="cv_redes">
+  <span class="slots-label"><strong><span id="slots_redes">—</span></strong> pedidos disponibles esta semana</span>
+</div>
       </div>
     </label>
     <label class="svc">
       <input type="radio" name="servicio" value="cv_web" required="">
       <div class="svc-body">
-        <h4 class="anchored">CV Web (Sitio)</h4>
+        <h2 class="anchored">CV Web (Sitio)</h2>
         <p>Sitio personal con proyectos y portfolio.</p>
         <div class="price"><span class="off">20% OFF</span> $80.000</div>
+        <div class="highlight-text2" data-svc="cv_web">
+  <span class="slots-label"><strong><span id="slots_web">—</span></strong> pedido disponible esta semana ️</span>
+</div>
       </div>
     </label>
   </div>
+  <p class="highlight-text">
+✨ Abonás <strong>cuando recibís</strong> tu CV ✨
+</p>
 
   <!-- Picker de estilos dinámico (se llena por JS según servicio elegido) -->
   <div id="stylePicker" class="style-picker hidden" aria-live="polite">
@@ -313,37 +376,31 @@ Un <strong>sitio web personal</strong> para mostrar tu <strong>CV</strong>, <str
 
       <!-- === CAMPOS OBLIGATORIOS === -->
       <label for="sobre_mi_clasico">Sobre mí</label>
-      <textarea id="sobre_mi_clasico" name="sobre_mi_clasico" rows="4" required="" placeholder="Describite en 2–3 frases; ej: Futbolista profesional, director técnico e icono deportivo global. Liderazgo fuera y dentro de la cancha. Creativo e influencer. Experiencia en alto rendimiento, gestión de planteles, representación internacional y comunicación mediática."></textarea>
+      <textarea id="sobre_mi_clasico" name="sobre_mi_clasico" rows="4" required="" placeholder="Describite en 2–3 frases; ej: Científico de datos con experiencia en investigación y análisis de datos. Metódico y con gran interés por la naturaleza y ecología."></textarea>
 
       <label for="experiencia_clasico">Experiencia laboral</label>
       <textarea id="experiencia_clasico" name="experiencia_clasico" rows="6" required="" placeholder="Usá ítems cronológicos. Ejemplo:
-2008–2010 | SELECCIÓN ARGENTINA DE FÚTBOL
-Director técnico
-Conducción de la Selección Nacional en Eliminatorias y Mundial FIFA 2010"></textarea>
+2022–2025 | Instituto de Investigación Ambiental, Investigador, Estudio de patrones de comportamiento animal y análisis de datos climáticos con R y Python. Colaboración en proyectos internacionales y publicaciones científicas."></textarea>
 
       <label for="educacion_clasico">Educación y formación</label>
       <textarea id="educacion_clasico" name="educacion_clasico" rows="4" required="" placeholder="Ítems cronológicos. Ejemplo:
-1998–1999 | ASOCIACIÓN DEL FÚTBOL ARGENTINO (AFA)
-Curso de dirección técnica"></textarea>
+2016–2018 | Universidad Nacional de Córdoba, Maestría en Ecología, Investigación sobre comportamiento animal y análisis de datos ecológicos. Trabajo final orientado a modelado estadístico y divulgación científica."></textarea>
 
       <!-- === CAMPOS OPCIONALES === -->
-      <label for="web_clasico">Enlace a página personal <span class="optional"></span></label>
-      <input type="text" id="web_clasico" name="web_clasico" placeholder="www.ejemplo.com" inputmode="url" autocomplete="url">
+      <label for="web_clasico">Enlace a página personal (opcional) <span class="optional"></span></label>
+      <input type="text" id="web_clasico" name="web_clasico" placeholder="www.mipaginapersonal.com" inputmode="url" autocomplete="url">
 
       <label for="idiomas_clasico">Idiomas <span class="optional"></span></label>
       <input type="text" id="idiomas_clasico" name="idiomas_clasico" placeholder="Español, Italiano, Inglés">
 
-      <label for="premios_clasico">Premios y distinciones <span class="optional"></span></label>
-      <textarea id="premios_clasico" name="premios_clasico" rows="3" placeholder="Listá premios, becas o distinciones relevantes. Ejemplo:
-2023 | Premio Konex – Trayectoria profesional
-2021 | Beca Fulbright – Investigación en EE.UU.
-2019 | Reconocimiento AFA al Mérito Deportivo"></textarea>
+      <label for="premios_clasico">Premios y distinciones (opcional) <span class="optional"></span></label>
+      <textarea id="premios_clasico" name="premios_clasico" rows="3" placeholder="Listá premios, becas o distinciones relevantes. Ejemplo: 2021 | Beca Fulbright – Investigación en EE.UU"></textarea>
 
       <label for="competencias_clasico">Competencias <span class="optional"></span></label>
-      <textarea id="competencias_clasico" name="competencias_clasico" rows="3" placeholder="2–3 frases; ej: Cirugía cardiovascular avanzada. Innovación en técnicas quirúrgicas (bypass coronario). Investigación y publicaciones científicas internacionales. Dirección de instituciones médicas y académicas."></textarea>
+      <textarea id="competencias_clasico" name="competencias_clasico" rows="3" placeholder="2–3 frases sobre tus principales competencias; ej: Análisis de datos con R y Python. Diseño y ejecución de experimentos de campo. Comunicación de resultados científicos en congresos y publicaciones."></textarea>
 
       <label for="capacidades_clasico">Capacidades relacionales y organizativas <span class="optional"></span></label>
-      <textarea id="capacidades_clasico" name="capacidades_clasico" rows="3" placeholder="1–2 frases; ej: Liderazgo y capitanía de equipos. Comunicación carismática en medios y eventos públicos."></textarea>
+      <textarea id="capacidades_clasico" name="capacidades_clasico" rows="3" placeholder="1–2 frases sobre tus habilidades interpersonales y de organización; ej: Coordinación de equipos de investigación multidisciplinarios. Comunicación clara y efectiva en reuniones, presentaciones y proyectos colaborativos."></textarea>
 
       <!-- ===== Bloque común (se muestra tras elegir estilo) ===== -->
       <div class="contenido-comun hidden" id="contenido-comun-clasico">
@@ -360,6 +417,7 @@ Curso de dirección técnica"></textarea>
 
 <div class="field mt-3 usar-foto-group" data-svc="clasico">
   <label class="label">¿Querés foto en el CV?</label>
+
   <div class="toggle-buttons" role="radiogroup" aria-label="¿Querés foto en el CV?">
     <input type="radio" id="foto-si-clasico" name="usarFoto" value="si" required="">
     <label for="foto-si-clasico" class="toggle">Sí</label>
@@ -375,6 +433,9 @@ Curso de dirección técnica"></textarea>
           <div class="counter" id="msgCounter_clasico" aria-live="polite">0/800</div>
         </div>
       </div>
+        <p class="highlight-text">
+✨ No te preocupes por que quede todo perfecto: <strong>nosotros te ayudaremos a pulir tu contenido</strong> ✨
+</p>
       <!-- ===== Fin bloque común ===== -->
     </div>
   </div>
@@ -387,35 +448,31 @@ Curso de dirección técnica"></textarea>
 
       <!-- Titular -->
       <label for="headline_redes">Titular</label>
-      <input type="text" id="headline_redes" name="headline_redes" required="" maxlength="140" placeholder="Definí tu trabajo en pocas palabras; ej.: Músico, compositor y productor">
+      <input type="text" id="headline_redes" name="headline_redes" required="" maxlength="140" placeholder="Definí tu trabajo en 2-3 palabras claves; ej.: Chef, Panadero, y Bartender">
 
       <!-- Experiencia (bullets) -->
-      <label for="experiencia_redes">Experiencia (bullets)</label>
-      <textarea id="experiencia_redes" name="experiencia_redes" rows="4" placeholder="Incluí solo experiencia destacada en bullets; ej.:
-• Serú Girán (1978–1982) — Vocalista, tecladista y compositor principal"></textarea>
+      <label for="experiencia_redes">Experiencia</label>
+      <textarea id="experiencia_redes" name="experiencia_redes" rows="4" placeholder="Incluí tu experiencia más destacada; ej.: Hotel Llao Llao — Chef principal (2018–presente), Hotel Patagónico — Sous chef (2015–2018), Catering El Andino — Encargado de cocina"></textarea>
 
       <!-- Habilidades (3–5 bullets) -->
-      <label for="habilidades_redes">Habilidades (3–5 bullets)</label>
-      <textarea id="habilidades_redes" name="habilidades_redes" rows="4" placeholder="3–5 habilidades en bullets; ej.:
-• Composición y arreglos musicales"></textarea>
+      <label for="habilidades_redes">Habilidades</label>
+      <textarea id="habilidades_redes" name="habilidades_redes" rows="4" placeholder="3–5 habilidades; ej.: Cocina de autor con productos locales, Panadería artesanal y fermentación natural, Gestión de equipos de cocina, Diseño de menús estacionales"></textarea>
 
       <!-- Educación (bullets) -->
-      <label for="educacion_redes">Educación (bullets)</label>
-      <textarea id="educacion_redes" name="educacion_redes" rows="3" placeholder="Formación en bullets; ej.:
-• Conservatorio Thibaud Piazzini (1959–1965)"></textarea>
+      <label for="educacion_redes">Educación</label>
+      <textarea id="educacion_redes" name="educacion_redes" rows="3" placeholder="Lista cronológica breve; ej.: Instituto Argentino de Gastronomía — Chef Profesional (2016–2018), Curso de Pastelería Francesa — Le Cordon Bleu (2020), Taller de cocina regional patagónica (2023)"></textarea>
 
       <!-- Sobre mí (2–3 frases) -->
-      <label for="sobre_mi_redes">Sobre mí (2–3 frases)</label>
-      <textarea id="sobre_mi_redes" name="sobre_mi_redes" rows="4" placeholder="Un resumen sobre tí; ej.:
-Músico y compositor argentino. Fusiono sofisticación armónica con una lírica crítica y poética, con trayectoria en grupos y carrera solista."></textarea>
+      <label for="sobre_mi_redes">Sobre mí</label>
+      <textarea id="sobre_mi_redes" name="sobre_mi_redes" rows="4" placeholder="Un resumen sobre vos en 2-3 frases; ej.: Chef patagónico con enfoque en cocina de autor y productos locales. Interesado en crear experiencias gastronómicas únicas, combinando tradición y técnica. Experiencia en restaurantes y eventos gourmet."></textarea>
 
       <!-- Link personal -->
-      <label for="web_redes">Link personal</label>
-      <input type="text" id="web_redes" name="web_redes" inputmode="url" autocomplete="url" placeholder="www.ejemplo.com">
+      <label for="web_redes">Link personal (opcional)</label>
+      <input type="text" id="web_redes" name="web_redes" inputmode="url" autocomplete="url" placeholder="www.chefpatagonico.com">
 
       <!-- Ubicación -->
       <label for="ubicacion_redes">Ubicación</label>
-      <input type="text" id="ubicacion_redes" name="ubicacion_redes" placeholder="Buenos Aires, Argentina">
+      <input type="text" id="ubicacion_redes" name="ubicacion_redes" placeholder="San Carlos de Bariloche, Argentina">
 
       <!-- ===== Bloque común (se muestra tras elegir estilo) ===== -->
       <div class="contenido-comun hidden" id="contenido-comun-redes">
@@ -448,59 +505,92 @@ Músico y compositor argentino. Fusiono sofisticación armónica con una lírica
         </div>
       </div>
       <!-- ===== Fin bloque común ===== -->
+      <p class="highlight-text">
+✨ No te preocupes por que quede todo perfecto: <strong>nosotros te ayudaremos a pulir tu contenido</strong> ✨
+</p>
     </div>
   </div>
 </fieldset>
 
-  <fieldset class="svc-fields hidden" id="content-web" data-for="cv_web">
-    <div class="card content-card">
-      <div class="card-body">
-        <h4 class="style-title anchored">Contenido</h4>
+<!-- ===== Contenido (CV WEB) ===== -->
+<fieldset class="svc-fields only-web hidden" id="content-web" data-for="cv_web" data-svc="cv-web">
+  <div class="card content-card">
+    <div class="card-body">
+      <h4 class="style-title anchored">Contenido</h4>
 
-        <label for="bio_web">Bio / Sobre mí (para el hero)</label>
-        <textarea id="bio_web" name="bio_web" rows="4"></textarea>
+      <!-- === CAMPOS OBLIGATORIOS (solo CV WEB) === -->
+      <label for="headline_web">Titular</label>
+      <textarea id="headline_web" name="headline_web" class="web-field" rows="2" required="" data-web-required="true" placeholder="Definí tu trabajo en 2–3 palabras clave. Ejemplo: Diseñador UX / Director creativo / Comunicador digital"></textarea>
+      
+      <label for="sobre_mi_web">Sobre mí</label>
+      <textarea id="sobre_mi_web" name="sobre_mi_web" class="web-field" rows="4" required="" data-web-required="true" placeholder="Describite en 2–3 frases. Ejemplo: Diseñador gráfico especializado en branding y comunicación visual. Ayudo a marcas y proyectos a construir una identidad clara y coherente."></textarea>
 
-        <label for="proyectos_web">Proyectos (nombre · breve descripción · enlace) — uno por línea</label>
-        <textarea id="proyectos_web" name="proyectos_web" rows="5"></textarea>
+      <label for="experiencia_web">Experiencia laboral</label>
+      <textarea id="experiencia_web" name="experiencia_web" class="web-field" rows="6" required="" data-web-required="true" placeholder="Usá ítems cronológicos. Ejemplo: 2022–2025 | Estudio Visual Patagonia, Diseñador gráfico y creador de marca, Desarrollo de identidad visual, diseño editorial y contenido digital para redes."></textarea>
 
-        <label for="links_web">Enlaces principales (LinkedIn, GitHub, Behance, Portfolio)</label>
-        <input type="text" id="links_web" name="links_web" placeholder="URLs separadas por coma">
+      <label for="educacion_web">Educación</label>
+      <textarea id="educacion_web" name="educacion_web" class="web-field" rows="4" required="" data-web-required="true" placeholder="Ítems cronológicos. Ejemplo: 2016–2019 | Universidad de Río Negro, Licenciatura en Diseño y Comunicación Visual"></textarea>
 
-        <label for="paleta_web">Preferencias de color/estilo</label>
-        <input type="text" id="paleta_web" name="paleta_web">
+      <!-- === CAMPOS OPCIONALES (solo CV WEB) === -->
+      <label for="web_web">Enlace a página personal (opcional)<span class="optional"></span></label>
+      <input type="text" id="web_web" name="web_web" class="web-field" placeholder="www.diseñadorautral.com" inputmode="url" autocomplete="url">
 
-        <div class="contenido-comun hidden" id="contenido-comun-web">
-          <div class="form-group">
-            <label for="cvfile_web">Adjuntá tu CV actual — PDF/DOC/DOCX (opcional)</label>
-            <div class="dropzone" id="dropzone_web" tabindex="0" aria-describedby="cvHelp_web">
-              <input type="file" id="cvfile_web" accept=".pdf,.doc,.docx">
-              <p>Arrastrá y soltá tu archivo acá o <span class="link">hacé clic para seleccionar</span></p>
-              <small id="cvHelp_web" class="file-note">Tamaño máx. 5 MB</small>
-              <div class="file-pill" id="filePill_web" hidden=""></div>
-            </div>
-            <div class="error" id="fileError_web" aria-live="polite"></div>
+      <label for="idiomas_web">Idiomas <span class="optional"></span></label>
+      <input type="text" id="idiomas_web" name="idiomas_web" class="web-field" placeholder="Español, Italiano, Inglés">
+
+      <label for="premios_web">Premios y distinciones (opcional)<span class="optional"></span></label>
+      <textarea id="premios_web" name="premios_web" class="web-field" rows="3" placeholder="Listá premios, becas o distinciones relevantes. Ejemplo: 2023 — Premio A! Diseño, categoría Identidad Visual; 2022 — Selección Behance Portfolios Destacados"></textarea>
+
+      <label for="competencias_web">Áreas de competencia <span class="optional"></span></label>
+      <textarea id="competencias_web" name="competencias_web" class="web-field" rows="3" placeholder="Ejemplo: Dirección de arte, branding, diseño editorial, contenido para redes, fotografía y storytelling visual."></textarea>
+
+      <label for="capacidades_web">Capacidades relacionales y organizativas <span class="optional"></span></label>
+      <textarea id="capacidades_web" name="capacidades_web" class="web-field" rows="3" placeholder="Ejemplo: Trabajo colaborativo con equipos creativos y técnicos. Gestión de proyectos audiovisuales y coordinación de campañas digitales."></textarea>
+
+      <!-- === EXTRAS CV WEB === -->
+      <label for="enlaces_web">Enlaces de interés<span class="optional"></span></label>
+      <input type="text" id="enlaces_web" name="enlaces_web" class="web-field" placeholder="LinkedIn: linkedin.com/in/usuario, GitHub: github.com/usuario, Pinterest, Twitter…">
+
+      <label for="portfolio_web">Link a fotos para galería/portfolio <span class="optional"></span></label>
+      <input type="text" id="portfolio_web" name="portfolio_web" class="web-field" placeholder="Recomendado: drive.google.com/mi-portfolio, carpeta de imágenes compartida en Google Drive o Dropbox">
+
+      <!-- ===== Bloque común (visible tras elegir estilo) ===== -->
+      <div class="contenido-comun hidden" id="contenido-comun-web" data-svc="cv-web">
+        <div class="form-group">
+          <label for="cvfile_web">Adjuntá tu CV actual — PDF/DOC/DOCX <span class="optional"></span></label>
+          <div class="dropzone web-dropzone" id="dropzone_web" tabindex="0" aria-describedby="cvHelp_web">
+            <input type="file" id="cvfile_web" class="web-file" accept=".pdf,.doc,.docx">
+            <p>Arrastrá y soltá tu archivo acá o <span class="link">hacé clic para seleccionar</span></p>
+            <small id="cvHelp_web" class="file-note">Tamaño máx. 5 MB</small>
+            <div class="file-pill" id="filePill_web" hidden=""></div>
           </div>
+          <div class="error" id="fileError_web" aria-live="polite"></div>
+        </div>
 
-<div class="field mt-3 usar-foto-group" data-svc="web">
-  <label class="label">¿Querés foto en el CV?</label>
-  <div class="toggle-buttons" role="radiogroup" aria-label="¿Querés foto en el CV?">
-    <input type="radio" id="foto-si-web" name="usarFoto" value="si" required="">
-    <label for="foto-si-web" class="toggle">Sí</label>
+        <div class="field mt-3 usar-foto-group only-web" data-svc="cv-web">
+          <label class="label">¿Querés foto en el CV?</label>
+          <div class="toggle-buttons" role="radiogroup" aria-label="¿Querés foto en el CV?">
+            <input type="radio" id="foto-si-web" name="usarFoto_web" value="si" required="" data-web-required="true">
+            <label for="foto-si-web" class="toggle">Sí</label>
 
-    <input type="radio" id="foto-no-web" name="usarFoto" value="no">
-    <label for="foto-no-web" class="toggle">No</label>
-  </div>
-</div>
-
-          <div class="mensaje-block">
-            <label for="mensaje_web">Mensaje</label>
-            <textarea id="mensaje_web" name="mensaje_web" rows="5" maxlength="800" placeholder="Contanos cualquier aclaración o pedido adicional."></textarea>
-            <div class="counter" id="msgCounter_web" aria-live="polite">0/800</div>
+            <input type="radio" id="foto-no-web" name="usarFoto_web" value="no">
+            <label for="foto-no-web" class="toggle">No</label>
           </div>
         </div>
+
+        <div class="mensaje-block">
+          <label for="mensaje_web">Mensaje <span class="optional"></span></label>
+          <textarea id="mensaje_web" name="mensaje_web" class="web-field" rows="5" maxlength="800" placeholder="Contanos cualquier aclaración o pedido adicional."></textarea>
+          <div class="counter" id="msgCounter_web" aria-live="polite">0/800</div>
+        </div>
       </div>
+      <!-- ===== Fin bloque común ===== -->
+      <p class="highlight-text">
+✨ No te preocupes por que quede todo perfecto: <strong>nosotros te ayudaremos a pulir tu contenido</strong> ✨
+</p>
     </div>
-  </fieldset>
+  </div>
+</fieldset>
 
   <div class="wizard-actions">
     <button type="button" class="btn btn-primary next" id="toStep2">Continuar</button>
@@ -532,7 +622,7 @@ Músico y compositor argentino. Fusiono sofisticación armónica con una lírica
     <label class="check">
       <input type="checkbox" id="consentDatos" name="consentimiento" value="acepto" required="">
       <span>Acepto el uso de mis datos y leí los
-        <a href="./terminos.html" target="_blank" rel="noopener">Términos y Condiciones</a>.
+        <a href="./terminos.html" target="_blank" rel="noopener">Términos y Condiciones</a>
       </span>
     </label>
   </div>
@@ -549,7 +639,6 @@ Músico y compositor argentino. Fusiono sofisticación armónica con una lírica
       <input type="hidden" name="_captcha" value="true">
       <input type="hidden" name="_template" value="table">
       <input type="hidden" name="_next" value="https://www.google.com/">
-      <input type="text" name="_honey" style="display:none">
       <input type="hidden" name="fileName" id="fileName">
       <input type="hidden" name="fileData" id="fileData">
     </form>
@@ -557,11 +646,60 @@ Músico y compositor argentino. Fusiono sofisticación armónica con una lírica
     <div id="formStatus" class="status" role="status" aria-live="polite"></div>
   </div>
 </div>
-<div class="footer-banner">
+
+<script>
+(async () => {
+  // 1) TU endpoint publicado del Apps Script (Nueva implementación > desplegar como app web)
+  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbyGn_3g2Z3TWvNEW0uWBF-Ez_xLvkZTjp2gu1QeH3ks25TKalFpdyV3CpdwUybaiz9o/exec?action=availability';
+
+  // 2) Mapea servicio → ID del span donde mostrás el número
+  const MAP = {
+    cv_clasico: 'slots_clasico',
+    cv_redes:   'slots_redes',
+    cv_web:     'slots_web'
+  };
+
+  // 3) Esperá al DOM por si esto se inyecta en medio del render
+  if (document.readyState !== 'complete' && document.readyState !== 'interactive') {
+    await new Promise(r => document.addEventListener('DOMContentLoaded', r, {once:true}));
+  }
+
+  try {
+    const res = await fetch(ENDPOINT, { cache: 'no-store' });
+    const data = await res.json();
+    if (!data.ok) throw new Error('Respuesta no OK');
+
+    const remaining = data.remaining || {};
+
+    for (const [svc, id] of Object.entries(MAP)) {
+      const el = document.getElementById(id);
+      if (!el) continue;
+
+      const left = Number.isFinite(remaining[svc]) ? remaining[svc] : 0;
+      el.textContent = String(left);
+
+      // (Opcional) deshabilitar la opción si no quedan cupos
+      if (left <= 0) {
+        const input = document.querySelector(`input[name="servicio"][value="${svc}"]`);
+        input && (input.disabled = true, input.checked = false);
+        const card = input?.closest('.svc');
+        card && card.classList.add('svc-disabled');
+      }
+    }
+  } catch (err) {
+    console.error('No pude cargar disponibilidad:', err);
+    // Dejar los “—” si falla
+  }
+})();
+</script>
+<footer class="footer-full">
 <p>
 Por dudas, escribinos a <a class="mail-link" href="mailto:mejoratucv.contacto@gmail.com?subject=Consulta%20puntual"> mejoratucv.contacto@gmail.com </a>
 </p>
-</div>
+<p class="footer-copy">
+© 2025 Mejorá Tu CV | Diseño y desarrollo: A.D.
+</p>
+</footer>
 <style>
 .mail-link {
   color: #ffffff !important;        /* blanco por defecto */

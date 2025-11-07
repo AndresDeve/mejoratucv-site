@@ -1,508 +1,382 @@
-// assets/js/script.js
+/* ─────────────────────  ÍNDICE (script.js)  ─────────────────────
+   [A] Utils            → helpers genéricos (qs/qsa, fullscreen api, etc.)
+   [B] Slider           → carruseles: prev/next + scrollBy ancho de página
+   [C] FormBasic        → honeypot, timestamp, validación de archivo en submit
+   [D] Fullscreen       → fullscreen por galería + foco/navegación teclado
+   [E] Wizard           → flujo 2 pasos, validaciones, style-picker, poda
+   [F] FileUI           → pills de archivo, validación, drag&drop global
+   [G] FileBase64       → convierte adjunto a base64 antes del submit final
+   [H] Bootstrap        → arranque: init de todos los módulos
+   [I] Slots
+──────────────────────────────────────────────────────────────────*/
+
 document.addEventListener("DOMContentLoaded", () => {
 
-  // =========================================================
-  // 1) SLIDER / CARRUSEL
-  // ---------------------------------------------------------
-  // attachSlider(id): Conecta botones y scroll del carrusel
-  // Dónde tocar:
-  //   - IDs de sliders en el HTML: "gallery-impresion", "gallery-digital"
-  //   - Velocidad/Distancia de scroll: usar pageW()
-  // =========================================================
-  function attachSlider(id) {
-    const root  = document.getElementById(id);
-    if (!root) return;
-    const track = root.querySelector(".slides");
-    const next  = root.querySelector(".slider-btn.next");
-    const prev  = root.querySelector(".slider-btn.prev");
-    if (!track) return;
+  // =============================== [A] Utils ===============================
+  const Utils = (() => {
+    const qs  = (sel, ctx=document) => ctx.querySelector(sel);
+    const qsa = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
 
-    const pageW = () => track.clientWidth;
+    // Fullscreen cross-browser
+    const enterFS = (el) =>
+      el.requestFullscreen?.() || el.webkitRequestFullscreen?.() || el.msRequestFullscreen?.();
+    const exitFS  = () =>
+      document.exitFullscreen?.() || document.webkitExitFullscreen?.() || document.msExitFullscreen?.();
+    const fsEl    = () =>
+      document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
 
-    next?.addEventListener("click", () => {
-      track.scrollBy({ left: pageW(), behavior: "smooth" });
-    });
-    prev?.addEventListener("click", () => {
-      track.scrollBy({ left: -pageW(), behavior: "smooth" });
-    });
-  }
+    // Scroller helpers
+    const pageWidth = (el) => el?.clientWidth || 0;
 
-  // Invocación sliders
-  attachSlider("gallery-impresion");
-  attachSlider("gallery-digital");
+    // Safe addEventListener (evita duplicados si re-bind)
+    const on = (el, type, handler, opts) => el && el.addEventListener(type, handler, opts||false);
+
+    // Small DOM
+    const h = (tag, attrs={}, html="") => {
+      const e = document.createElement(tag);
+      Object.entries(attrs).forEach(([k,v]) => (k in e) ? e[k]=v : e.setAttribute(k,v));
+      if (html) e.innerHTML = html;
+      return e;
+    };
+
+    return { qs, qsa, enterFS, exitFS, fsEl, pageWidth, on, h };
+  })();
 
 
-  // =========================================================
-  // 2) FORM BÁSICO (HONEYPOT + TIMESTAMP + VALIDACIÓN CV)
-  // ---------------------------------------------------------
-  // Qué hace:
-  //   - Crea input honeypot si falta
-  //   - Crea input oculto con timestamp de inicio
-  //   - Valida archivo adjunto (si el usuario sube uno)
-  // Dónde tocar:
-  //   - Tamaño máximo archivo (5 MB)
-  //   - Extensiones permitidas
-  //   - Mensajes de alert()
-  // =========================================================
-  const formEl = document.getElementById("pedidoForm");
-  if (formEl) {
-    // Honeypot (anti-spam)
-    let honey = formEl.querySelector('input[name="_honey"]');
-    if (!honey) {
-      honey = document.createElement("input");
-      honey.type = "text";
-      honey.name = "_honey";
-      honey.tabIndex = -1;
-      honey.autocomplete = "off";
-      honey.setAttribute("aria-hidden", "true");
-      Object.assign(honey.style, {
-        position: "absolute", left: "-10000px", top: "auto",
-        width: "1px", height: "1px", overflow: "hidden"
-      });
-      formEl.appendChild(honey);
+  // ============================== [B] Slider ===============================
+  const Slider = (() => {
+    function attach(id) {
+      const root = Utils.qs(`#${id}`);
+      if (!root) return;
+      const track = Utils.qs(".slides", root);
+      const next  = Utils.qs(".slider-btn.next", root);
+      const prev  = Utils.qs(".slider-btn.prev", root);
+      if (!track) return;
+
+      Utils.on(next, "click", () => track.scrollBy({ left:  Utils.pageWidth(track),  behavior: "smooth" }));
+      Utils.on(prev, "click", () => track.scrollBy({ left: -Utils.pageWidth(track),  behavior: "smooth" }));
     }
-
-    // Timestamp oculto
-    let startEl = formEl.querySelector("#formStart");
-    if (!startEl) {
-      startEl = document.createElement("input");
-      startEl.type = "hidden";
-      startEl.id   = "formStart";
-      startEl.name = "_formStart";
-      formEl.appendChild(startEl);
+    function init() {
+      ["gallery-impresion","gallery-digital","gallery-web"].forEach(attach);
     }
-    const start = Date.now();
-    startEl.value = String(start);
+    return { init };
+  })();
 
-    // Validación archivo CV (opcional)
-    const cvEl = document.getElementById("cvfile");
 
-    // Validación archivo CV (opcional)
-formEl.addEventListener("submit", (e) => {
-  // Gate anti-bot por tiempo
-  if (Date.now() - start < 1000) {
-    e.preventDefault();
-    alert("Por favor revisá tus datos y volvé a intentar.");
-    return;
-  }
-  // Honeypot
-  if (honey && honey.value.trim() !== "") {
-    e.preventDefault();
-    alert("Error: detección anti-spam. Por favor enviá nuevamente.");
-    return;
-  }
-
-  // Archivo (sólo el activo tendrá name="attachment")
-const cvInput = document.querySelector('.svc-fields:not(.hidden) input[type="file"][id^="cvfile_"]');
-const file = cvInput?.files?.[0] || null;
-
-  if (file) {
-    const maxPerFile = 5 * 1024 * 1024; // 5MB
-    if (!/\.(pdf|docx?)$/i.test(file.name)) {
-      e.preventDefault();
-      alert("El CV debe ser PDF, DOC o DOCX.");
-      return;
+  // ============================ [C] FormBasic ==============================
+  const FormBasic = (() => {
+    function ensureHoneypot(form) {
+      let honey = form.querySelector('input[name="_honey"]');
+      if (honey) return honey;
+      honey = Utils.h("input", { type:"text", name:"_honey", tabIndex:-1, autocomplete:"off" });
+      Object.assign(honey.style, { position:"absolute", left:"-10000px", width:"1px", height:"1px", overflow:"hidden" });
+      form.appendChild(honey);
+      return honey;
     }
-    if (file.size > maxPerFile) {
-      e.preventDefault();
-      alert("El CV supera los 5 MB. Subí un archivo más liviano.");
-      return;
-    }
-  }
-});
-  }
-
-
-  // =========================================================
-  // 3) FULLSCREEN (REEMPLAZA LIGHTBOX)
-  // ---------------------------------------------------------
-  // attachFullscreen(galleryId): pantalla completa por galería
-  // Qué hace:
-  //   - Entra/sale de fullscreen
-  //   - Mantiene índice de slide activa
-  //   - Navega con teclado (← → Esc)
-  // Dónde tocar:
-  //   - IDs de galerías
-  //   - Clases CSS para .is-focused
-  // =========================================================
-  function attachFullscreen(galleryId) {
-    const gallery = document.getElementById(galleryId);
-    if (!gallery) { console.warn("[fullscreen] No se encontró #"+galleryId); return; }
-
-    const imgs   = Array.from(gallery.querySelectorAll(".slide img"));
-    const slides = Array.from(gallery.querySelectorAll(".slide"));
-    const track  = gallery.querySelector(".slides");
-    if (!track || !imgs.length) return;
-
-    // Helpers Fullscreen
-    const enterFS   = (el) => el.requestFullscreen?.() || el.webkitRequestFullscreen?.() || el.msRequestFullscreen?.();
-    const exitFS    = () => document.exitFullscreen?.() || document.webkitExitFullscreen?.() || document.msExitFullscreen?.();
-    const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
-
-    // Botón salir (único)
-    let exitBtn = document.getElementById("fs-exit-btn");
-    if (!exitBtn) {
-      exitBtn = document.createElement("button");
-      exitBtn.id = "fs-exit-btn";
-      exitBtn.type = "button";
-      exitBtn.textContent = "Salir de pantalla completa";
-      exitBtn.setAttribute("aria-label", "Salir de pantalla completa");
-      exitBtn.style.display = "none";
-      document.body.appendChild(exitBtn);
-    }
-
-    // Estado por galería
-    let idx = -1;
-
-    // ---- utilidades internas
-    function focusSlideByIndex(i) {
-      slides.forEach(s => s.classList.remove("is-focused"));
-      if (slides[i]) slides[i].classList.add("is-focused");
-    }
-    function scrollTrackToIndex(i) {
-      if (!track || !slides[i]) return;
-      const slide = slides[i];
-      const left  = slide.offsetLeft - (track.clientWidth - slide.clientWidth) / 2;
-      track.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
-    }
-    function openFull(i) {
-      if (i < 0 || i >= imgs.length) return;
-      idx = i;
-      focusSlideByIndex(idx);
-      enterFS(gallery);
-    }
-    function closeFull() {
-      exitBtn.style.display = "none";
-      exitFS();
-    }
-    function showNext(dir) {
-      if (idx < 0) return;
-      idx += (dir > 0 ? 1 : -1);
-      if (idx >= imgs.length) idx = 0;
-      if (idx < 0) idx = imgs.length - 1;
-      focusSlideByIndex(idx);
-    }
-
-    // Activar imágenes
-    imgs.forEach((img, i) => {
-      if (!img.hasAttribute("tabindex")) img.setAttribute("tabindex", "0");
-      if (!img.hasAttribute("role"))     img.setAttribute("role", "button");
-      img.style.cursor = "zoom-in";
-      img.addEventListener("click",   () => openFull(i));
-      img.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openFull(i); }
-      });
-    });
-
-    // Teclado en FS
-    document.addEventListener("keydown", (e) => {
-      if (fsElement() !== gallery) return;
-      if (e.key === "Escape")      { e.preventDefault(); closeFull(); }
-      else if (e.key === "ArrowRight") showNext(1);
-      else if (e.key === "ArrowLeft")  showNext(-1);
-    });
-
-    // Botón salida
-    exitBtn.addEventListener("click", closeFull);
-
-    // Click sobre la galería en FS → salir
-    gallery.addEventListener("click", (e) => {
-      const inFS = fsElement() === gallery;
-      if (inFS) {
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation?.();
-        closeFull();
+    function ensureStart(form) {
+      let startEl = form.querySelector("#formStart");
+      if (!startEl) {
+        startEl = Utils.h("input", { type:"hidden", id:"formStart", name:"_formStart" });
+        form.appendChild(startEl);
       }
-    }, true);
+      startEl.value = String(Date.now());
+      return startEl;
+    }
 
-    // Entrada/Salida de FS
-    function onFSChange() {
-      if (fsElement() === gallery) {
-        document.body.classList.add("fs-open");
-        exitBtn.style.display = "block";
-        exitBtn.focus();
-        focusSlideByIndex(idx);
-      } else {
-        if (idx >= 0) {
-          slides.forEach(s => s.classList.remove("is-focused"));
-          slides[idx].classList.add("is-focused");
-          requestAnimationFrame(() => setTimeout(() => scrollTrackToIndex(idx), 0));
+    function validateFile(file) {
+      if (!/\.(pdf|docx?)$/i.test(file.name)) return "El CV debe ser PDF, DOC o DOCX.";
+      if (file.size > 5*1024*1024)          return "El CV supera los 5 MB. Subí un archivo más liviano.";
+      return "";
+    }
+
+    function onSubmit(form, honey, start) {
+      Utils.on(form, "submit", (e) => {
+        if (Date.now() - Number(start.value||0) < 1000) { e.preventDefault(); alert("Por favor revisá tus datos y volvé a intentar."); return; }
+        if (honey && honey.value.trim() !== "")         { e.preventDefault(); alert("Error: detección anti-spam. Por favor enviá nuevamente."); return; }
+
+        // Sólo valida el file del FS visible (wizard asigna el activo)
+        const cvInput = document.querySelector('.svc-fields:not(.hidden) input[type="file"][id^="cvfile_"]');
+        const file = cvInput?.files?.[0];
+        if (file) {
+          const err = validateFile(file);
+          if (err) { e.preventDefault(); alert(err); }
         }
-        document.body.classList.remove("fs-open");
-        exitBtn.style.display = "none";
-      }
+      });
     }
-    document.addEventListener("fullscreenchange", onFSChange);
-    document.addEventListener("webkitfullscreenchange", onFSChange);
-    document.addEventListener("MSFullscreenChange", onFSChange);
-  }
 
-  // Invocación fullscreen por galería
-  attachFullscreen("gallery-impresion");
-  attachFullscreen("gallery-digital");
+    function init() {
+      const form = Utils.qs("#pedidoForm");
+      if (!form) return;
+      const honey = ensureHoneypot(form);
+      const start = ensureStart(form);
+      onSubmit(form, honey, start);
+    }
+
+    return { init };
+  })();
 
 
-// === WIZARD 2 PASOS (Servicio+Estilo+Contenido → Datos) ===
-(function () {
-  const wizard = document.getElementById('pedido-wizard');
-  if (!wizard) return;
+  // ============================ [D] Fullscreen =============================
+  const Fullscreen = (() => {
+    function attach(galleryId) {
+      const gallery = Utils.qs(`#${galleryId}`);
+      if (!gallery) return;
 
-  const form = wizard.querySelector('#pedidoForm');
-  if (!form) return;
+      const imgs   = Utils.qsa(".slide img", gallery);
+      const slides = Utils.qsa(".slide", gallery);
+      const track  = Utils.qs(".slides", gallery);
+      if (!track || !imgs.length) return;
 
-  // Progreso / dots (2 pasos)
-  const progressFill  = wizard.querySelector('#progressFill');
-  const progressLabel = wizard.querySelector('#progressLabel');
-  const dots = [
-    wizard.querySelector('#dot1'),
-    wizard.querySelector('#dot2')
-  ].filter(Boolean);
+      // Exit button único
+      let exitBtn = Utils.qs("#fs-exit-btn");
+      if (!exitBtn) {
+        exitBtn = Utils.h("button", { id:"fs-exit-btn", type:"button", "aria-label":"Salir de pantalla completa" }, "Salir de pantalla completa");
+        exitBtn.style.display = "none";
+        document.body.appendChild(exitBtn);
+      }
 
-  // Secciones
-  const step1 = wizard.querySelector('[data-step="1"]');
-  const step2 = wizard.querySelector('[data-step="2"]');
+      let idx = -1;
+      const focusSlide = (i) => { slides.forEach(s=>s.classList.remove("is-focused")); if (slides[i]) slides[i].classList.add("is-focused"); };
+      const openFull   = (i) => { if (i<0 || i>=imgs.length) return; idx=i; focusSlide(i); Utils.enterFS(gallery); };
+      const closeFull  = () => { exitBtn.style.display="none"; Utils.exitFS(); };
+      const next = (dir) => { if (idx<0) return; idx += (dir>0?1:-1); if (idx>=imgs.length) idx=0; if (idx<0) idx=imgs.length-1; focusSlide(idx); };
 
-  // Botones
-  const toStep2   = wizard.querySelector('#toStep2');
-  const backTo1   = wizard.querySelector('#backTo1');
-  const submitBtn = wizard.querySelector('#submitBtn');
-  const consent   = wizard.querySelector('#consentDatos');
+      imgs.forEach((img, i) => {
+        img.tabIndex = img.tabIndex || 0;
+        img.setAttribute("role","button");
+        img.style.cursor = "zoom-in";
+        Utils.on(img, "click", () => openFull(i));
+        Utils.on(img, "keydown", (e) => { if (e.key==="Enter"||e.key===" ") { e.preventDefault(); openFull(i); } });
+      });
 
-  // Servicio y fieldsets
-  const radiosServicio = wizard.querySelectorAll('input[name="servicio"]');
-  const svcGroups = Array.from(wizard.querySelectorAll('.svc-fields'));
+      Utils.on(document, "keydown", (e) => {
+        if (Utils.fsEl() !== gallery) return;
+        if (e.key === "Escape") { e.preventDefault(); closeFull(); }
+        else if (e.key === "ArrowRight") next(1);
+        else if (e.key === "ArrowLeft")  next(-1);
+      });
 
-  // Picker de estilos
-  const stylePicker = wizard.querySelector('#stylePicker');
-  const styleGrid   = wizard.querySelector('#styleGrid');
-  const estiloCard  = wizard.querySelector('#estiloCard');
+      Utils.on(exitBtn, "click", closeFull);
 
-  // Opciones por servicio
-  const STYLE_MAP = {
-    cv_clasico: [
-      { value: 'moderno',       caption: 'Moderno',             img: 'assets/CV_Maradona.png' },
-      { value: 'minimalista',   caption: 'Minimalista/Sobrio',  img: 'assets/CV_favaloro.png' },
-      { value: 'academico',     caption: 'Académico',           img: 'assets/CV_Houssay.png' },
-      { value: 'personalizado', caption: 'Personalizado',       img: 'assets/CV_sparrow.png' }
-    ],
-    cv_redes: [
-      { value: 'minimalista',   caption: 'Minimalista/Sobrio',  img: 'assets/CV_Digital_Maradona.png' },
-      { value: 'moderno',       caption: 'Moderno',             img: 'assets/CV_charly_digital.png' }
-    ],
-    cv_web: [
-      { value: 'personalizable', caption: 'Personalizable',     img: 'assets/CV_Web_Maradona_preview.png' }
+      Utils.on(gallery, "click", (e) => {
+        if (Utils.fsEl() === gallery) {
+          e.preventDefault(); e.stopPropagation();
+          closeFull();
+        }
+      }, true);
+
+      const onFSChange = () => {
+        if (Utils.fsEl() === gallery) {
+          document.body.classList.add("fs-open");
+          exitBtn.style.display = "block";
+          exitBtn.focus();
+          focusSlide(idx);
+        } else {
+          document.body.classList.remove("fs-open");
+          exitBtn.style.display = "none";
+          slides.forEach(s=>s.classList.remove("is-focused"));
+        }
+      };
+      ["fullscreenchange","webkitfullscreenchange","MSFullscreenChange"].forEach(evt =>
+        Utils.on(document, evt, onFSChange)
+      );
+    }
+
+    function init() {
+      ["gallery-impresion","gallery-digital"].forEach(attach);
+    }
+
+    return { init };
+  })();
+
+
+  // ============================== [E] Wizard ===============================
+  const Wizard = (() => {
+    // Config de estilos por servicio
+    const STYLE_MAP = {
+      cv_clasico: [
+        { value:'moderno',       caption:'Moderno',            img:'assets/CV_Maradona.png' },
+        { value:'minimalista',   caption:'Minimalista/Sobrio', img:'assets/CV_favaloro.png' },
+        { value:'academico',     caption:'Académico',          img:'assets/CV_Houssay.png' },
+        { value:'personalizado', caption:'Personalizado',      img:'assets/CV_sparrow.png' }
+      ],
+      cv_redes: [
+        { value:'minimalista',   caption:'Minimalista/Sobrio', img:'assets/CV_Digital_Maradona.png' },
+        { value:'moderno',       caption:'Moderno',            img:'assets/CV_charly_digital.png' }
+      ],
+      cv_web: [
+      { 
+        value: 'moderno',     
+        caption: 'Moderno',            
+        img: 'assets/CV_Web_Maradona_preview.png',
+        link: 'https://maradona.mejoratucv.com.ar/'
+      },
+      { 
+        value: 'minimalista', 
+        caption: 'Minimalista/Sobrio', 
+        img: 'assets/CV_Web_Maradona2_preview.png',
+        link: 'https://maradona2.mejoratucv.com.ar/'
+      }
     ]
-  };
+    };
 
-  function setProgress(step){
-    if (!progressFill || !progressLabel) return;
-    progressFill.style.width = step === 1 ? '50%' : '100%';
-    if (dots.length) dots.forEach((d,i)=> d.classList.toggle('active', i < step));
-    progressLabel.textContent = (step === 1)
-      ? 'Paso 1 de 2 — Servicio, estilo y contenido'
-      : 'Paso 2 de 2 — Datos personales y envío';
-  }
+    // --- estado/refs ---
+    let wizard, form, step1, step2, toStep2, backTo1, submitBtn, consent;
+    let progressFill, progressLabel, dots;
+    let radiosServicio, svcGroups, stylePicker, styleGrid, estiloCard;
 
-  function showStep(n){
-    [step1,step2].forEach((s,i)=> s?.classList.toggle('hidden', (i+1)!==n));
-    setProgress(n);
-  }
+    // --- helpers internos ---
+    const getService = () => Utils.qs('input[name="servicio"]:checked', wizard)?.value || null;
+    const getActiveFs = () => svcGroups.find(fs => !fs.classList.contains('hidden')) || null;
 
-  // Helpers
-  function getService(){
-    const r = wizard.querySelector('input[name="servicio"]:checked');
-    return r?.value || null;
-  }
-  function clearStyleSelection() {
-    if (estiloCard) estiloCard.value = '';
-    if (!styleGrid) return;
-    const checked = styleGrid.querySelector('input[type="radio"]:checked');
-    if (checked) checked.checked = false;
-  }
+    function setProgress(step){
+      if (!progressFill || !progressLabel) return;
+      progressFill.style.width = step===1 ? "50%" : "100%";
+      dots.forEach((d,i)=> d.classList.toggle("active", i < step));
+      progressLabel.textContent = (step===1)
+        ? "Paso 1 de 2 — Servicio, estilo y contenido"
+        : "Paso 2 de 2 — Datos personales y envío";
+    }
 
-  // Activar un único fieldset + un único attachment
-function setFieldsetActive(fs, active){
+    function showStep(n){
+      [step1,step2].forEach((s,i)=> s?.classList.toggle('hidden', (i+1)!==n));
+      setProgress(n);
+    }
+    function bindActiveFotoGroup() {
+  const fs = getActiveFs();
   if (!fs) return;
-  const fields = fs.querySelectorAll('input, textarea, select');
+  // Desbindeo defensivo: clonar el contenedor para limpiar listeners previos
+  const grp = fs.querySelector('.usar-foto-group');
+  if (!grp) return;
+  const clone = grp.cloneNode(true);
+  grp.parentNode.replaceChild(clone, grp);
+
+  // Bind SOLO a los radios del FS activo (tanto nombre genérico como web)
+  Utils.qsa('input[name="usarFoto"], input[name="usarFoto_web"]', clone)
+    .forEach(r => Utils.on(r, 'change', validateStep1AndToggle));
+}
+
+    function clearStyleSelection() {
+      if (estiloCard) estiloCard.value = '';
+      const checked = styleGrid?.querySelector('input[type="radio"]:checked');
+      if (checked) checked.checked = false;
+    }
+
+    function setFieldsetActive(fs, active){
+      if (!fs) return;
+      const fields = fs.querySelectorAll('input, textarea, select');
+
+      if (active) {
+        // Asegurar que sólo el FS activo lleve name="attachment" si existiera
+        document.querySelectorAll('input[type="file"][name="attachment"]').forEach(inp=>{
+          if (!fs.contains(inp)) inp.removeAttribute('name');
+        });
+      }
+
+      fields.forEach(el => {
+  const type = (el.type || '').toLowerCase();
+
+  // required ⇄ data-required (solo sobre el FS activo)
+  if (active) {
+    if (el.dataset.required === 'true') { el.required = true; delete el.dataset.required; }
+  } else {
+    if (el.required) { el.dataset.required = 'true'; el.required = false; }
+  }
 
   if (active) {
-    // Asegurá que no haya otros inputs file con name="attachment"
-    document.querySelectorAll('input[type="file"][name="attachment"]').forEach(inp=>{
-      if (!fs.contains(inp)) inp.removeAttribute('name');
-    });
+    if (!el.name && el.dataset.name) el.name = el.dataset.name;
+    el.disabled = false;
+  } else {
+    if (el.name) el.dataset.name = el.name;
+    if (type !== 'file') el.removeAttribute('name');      // saca name de TODO lo no-file
+    el.disabled = true;
+    if (type === 'radio' || type === 'checkbox') el.checked = false; // resetea radios/checkbox
   }
+});
 
-  fields.forEach(el => {
-    const type = (el.type || '').toLowerCase();
-
-    // Manejo de required
-    if (active) {
-      if (el.dataset.required === 'true') {
-        el.required = true;
-        delete el.dataset.required;
-      }
-    } else {
-      if (el.required) {
-        el.dataset.required = 'true';
-        el.required = false;
-      }
+      fs.classList.toggle('hidden', !active);
     }
 
-    if (active){
-      if (!el.name && el.dataset.name) el.name = el.dataset.name;
-      // No tocar inputs file (sin name para evitar multipart)
-      el.disabled = false;
-    } else {
-      if (el.name) el.dataset.name = el.name;
-      if (type !== 'file') el.removeAttribute('name');
-      el.disabled = true;
+    function hideAllContent(){ svcGroups.forEach(fs => setFieldsetActive(fs, false)); }
 
-      // 🚿 Extra: si es el grupo de "usarFoto" y ocultamos, desmarcamos
-      if (type === 'radio' && el.matches('input[name="usarFoto"]')) {
-        el.checked = false;
+    function bindMessageCounter(fs) {
+      if (!fs) return;
+      const msg = fs.querySelector('textarea[id^="mensaje_"]');
+      const counter = fs.querySelector('div[id^="msgCounter_"]');
+      if (!msg || !counter) return;
+
+      // Rebind limpio
+      const clone = msg.cloneNode(true);
+      msg.parentNode.replaceChild(clone, msg);
+      const msgClean = fs.querySelector('textarea[id^="mensaje_"]');
+
+      const update = () => { counter.textContent = `${msgClean.value.length}/800`; };
+      Utils.on(msgClean, "input", update);
+      update();
+    }
+
+    function renderStyleOptions(serviceValue) {
+      if (!stylePicker || !styleGrid) return;
+
+      if (!serviceValue || !STYLE_MAP[serviceValue]) {
+        stylePicker.classList.add('hidden');
+        styleGrid.innerHTML = '';
+        clearStyleSelection();
+        hideAllContent();
+        return;
       }
+
+      const options = STYLE_MAP[serviceValue];
+      stylePicker.classList.remove('hidden');
+      styleGrid.innerHTML = '';
+
+      options.forEach((opt, idx) => {
+  const id = `estilo_card_${serviceValue}_${idx}`;
+
+  const cardHTML = `
+    <input type="radio" id="${id}" name="estilo_card" value="${opt.value}" required>
+    <img src="${opt.img}" alt="${opt.caption}">
+    <div class="style-caption"><span>${opt.caption}</span></div>
+    ${opt.link && serviceValue === 'cv_web'
+      ? `<a href="${opt.link}" target="_blank" rel="noopener" class="style-demo" tabindex="-1">Ver demo</a>`
+      : ``}
+  `;
+
+  const card = Utils.h("label", { className:"style-card", htmlFor:id });
+  card.innerHTML = cardHTML;
+
+  const radio = card.querySelector('input[type="radio"]');
+  Utils.on(radio, "change", () => {
+    if (radio.checked && estiloCard) {
+      estiloCard.value = opt.value;
+      const svc = getService();
+      hideAllContent();
+      if (svc){
+        const fs = svcGroups.find(x => x.getAttribute('data-for') === svc);
+        setFieldsetActive(fs, true);
+        bindActiveFotoGroup();
+        bindMessageCounter(fs);
+        FileUI.bindDropzone(fs);
+        fs?.querySelector('.contenido-comun')?.classList.remove('hidden');
+        fs?.scrollIntoView({ behavior:"smooth", block:"start" });
+      }
+      validateStep1AndToggle();
     }
   });
 
-  fs.classList.toggle('hidden', !active);
-}
-
-  function hideAllContent(){
-    svcGroups.forEach(fs => setFieldsetActive(fs, false));
-  }
-  function getActiveFs() {
-    return svcGroups.find(fs => !fs.classList.contains('hidden')) || null;
-  }
-
-  // Contador de mensaje
-  function bindMessageCounter(fs) {
-    if (!fs) return;
-    const msg = fs.querySelector('textarea[id^="mensaje_"]');
-    const counter = fs.querySelector('div[id^="msgCounter_"]');
-    if (!msg || !counter) return;
-
-    const clone = msg.cloneNode(true);
-    msg.parentNode.replaceChild(clone, msg);
-    const msgClean = fs.querySelector('textarea[id^="mensaje_"]');
-
-    const updateCounter = () => { counter.textContent = `${msgClean.value.length}/800`; };
-    msgClean.addEventListener('input', updateCounter);
-    updateCounter();
-  }
-
-// Dropzone / file  — versión sin clonado (idempotente)
-function bindDropzone(fs) {
-  if (!fs) return;
-
-  const dropzone  = fs.querySelector('div[id^="dropzone_"]');
-  const fileInput = fs.querySelector('input[id^="cvfile_"]');
-  const filePill  = fs.querySelector('div[id^="filePill_"]');
-  const fileError = fs.querySelector('div[id^="fileError_"]');
-
-  if (!dropzone || !fileInput) return;
-
-  // No usar name en el file input (evita multipart)
-fileInput.disabled = false;
-
-  // Evitar listeners duplicados usando bandera
-  if (!dropzone.dataset.bound) {
-    dropzone.addEventListener('click', () => fileInput.click());
-    dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragover'); });
-    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
-    dropzone.addEventListener('drop', e => {
-      e.preventDefault();
-      dropzone.classList.remove('dragover');
-      const f = e.dataTransfer?.files?.[0];
-      if (f && validateFileForDz(f, fileError)) {
-        try {
-          const dt = new DataTransfer();
-          dt.items.add(f);
-          fileInput.files = dt.files;  // lista para el submit
-        } catch {}
-        showFilePill(fileInput, f);
-        if (typeof validateStep1AndToggle === 'function') validateStep1AndToggle();
-      }
+  // Evitar que hacer click en “Ver demo” seleccione el radio
+  const demoLink = card.querySelector('.style-demo');
+  if (demoLink) {
+    demoLink.addEventListener('click', (e) => {
+      e.stopPropagation();
     });
-    dropzone.dataset.bound = '1';
   }
 
-  if (!fileInput.dataset.bound) {
-    fileInput.addEventListener('change', () => {
-      const f = fileInput.files?.[0];
-      if (f && validateFileForDz(f, fileError)) {
-        showFilePill(fileInput, f);
-        if (typeof validateStep1AndToggle === 'function') validateStep1AndToggle();
-      }
-    });
-    fileInput.dataset.bound = '1';
-  }
-
-  function validateFileForDz(f, errEl) {
-    if (errEl) errEl.textContent = '';
-    const okType = /(pdf|doc|docx)$/i.test((f.name.split('.').pop()||''));
-    if (!okType){ if (errEl) errEl.textContent = 'Formato no válido. Subí PDF, DOC o DOCX.'; return false; }
-    if (f.size > 5*1024*1024){ if (errEl) errEl.textContent = 'El archivo supera 5 MB.'; return false; }
-    return true;
-  }
-}
-
-  // Render de estilos
-  function renderStyleOptions(serviceValue) {
-    if (!stylePicker || !styleGrid) return;
-
-    if (!serviceValue || !STYLE_MAP[serviceValue]) {
-      stylePicker.classList.add('hidden');
-      styleGrid.innerHTML = '';
-      clearStyleSelection();
-      hideAllContent();
-      return;
+  styleGrid.appendChild(card);
+});
     }
 
-    const options = STYLE_MAP[serviceValue];
-    stylePicker.classList.remove('hidden');
-    styleGrid.innerHTML = '';
-
-    options.forEach((opt, idx) => {
-      const id = `estilo_card_${serviceValue}_${idx}`;
-      const card = document.createElement('label');
-      card.className = 'style-card';
-      card.setAttribute('for', id);
-      card.innerHTML = `
-        <input type="radio" id="${id}" name="estilo_card" value="${opt.value}" required>
-        <img src="${opt.img}" alt="${opt.caption}">
-        <div class="style-caption">
-          <span>${opt.caption}</span>
-        </div>
-      `;
-      card.addEventListener('change', () => {
-        const r = card.querySelector('input[type="radio"]');
-        if (r && r.checked && estiloCard) {
-          estiloCard.value = opt.value;
-          const svc = getService();
-          hideAllContent();
-          if (svc){
-            const fs = svcGroups.find(x => x.getAttribute('data-for') === svc);
-            setFieldsetActive(fs, true);
-            bindMessageCounter(fs);
-            bindDropzone(fs);
-            const commonBlock = fs.querySelector('.contenido-comun');
-            if (commonBlock) commonBlock.classList.remove('hidden');
-            fs?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-          validateStep1AndToggle();
-        }
-      });
-      styleGrid.appendChild(card);
-    });
-  }
-
-  // Timestamp inicial (informativo)
-  const start = wizard.querySelector('#formStart');
-  if (start) start.value = new Date().toISOString();
-
-  // Paso 1: validación mínima (servicio + estilo + obligatorios del FS activo)
-function validateStep1(){
+    function validateStep1(){
   const svc = getService();
   const estiloElegido = estiloCard?.value;
   if (!svc || !estiloElegido) return false;
@@ -510,448 +384,474 @@ function validateStep1(){
   const fs = getActiveFs();
   if (!fs) return false;
 
-  if (svc === 'cv_redes') {
-  const titular     = fs.querySelector('#headline_redes');
-  const experiencia = fs.querySelector('#experiencia_redes');
-  const habilidades = fs.querySelector('#habilidades_redes');
-  const educacion   = fs.querySelector('#educacion_redes');
-  const fotoOk      = Array.from(fs.querySelectorAll('input[name="usarFoto"]')).some(r => r.checked);
+  // Radios "foto" dentro del fieldset activo (independiente del name exacto)
+  const fotoInputs = fs.querySelectorAll('.usar-foto-group input[type="radio"]');
+  const fotoOkOrNotPresent = fotoInputs.length === 0 || Array.from(fotoInputs).some(r => r.checked);
 
-  if (
-    !titular || !titular.value.trim() ||
-    !experiencia || !experiencia.value.trim() ||
-    !habilidades || !habilidades.value.trim() ||
-    !educacion || !educacion.value.trim() ||
-    !fotoOk
-  ) {
-    return false;
+  if (svc === 'cv_redes') {
+    const titular     = fs.querySelector('#headline_redes');
+    const experiencia = fs.querySelector('#experiencia_redes');
+    const habilidades = fs.querySelector('#habilidades_redes');
+    const educacion   = fs.querySelector('#educacion_redes');
+    if (!titular?.value.trim() || !experiencia?.value.trim() ||
+        !habilidades?.value.trim() || !educacion?.value.trim() ||
+        !fotoOkOrNotPresent) { return false; }
   }
+
+  if (svc === 'cv_web') {
+  const headline  = (fs.querySelector('#headline_web')?.value || '').trim();
+  const sobreMi   = (fs.querySelector('#sobre_mi_web')?.value || '').trim();
+  const exp       = (fs.querySelector('#experiencia_web')?.value || '').trim();
+  const educacion = (fs.querySelector('#educacion_web')?.value || '').trim();
+
+  const fotoOk = Array.from(fs.querySelectorAll('input[name="usarFoto_web"]'))
+                      .some(r => r.checked);
+
+  if (!headline || !sobreMi || !exp || !educacion || !fotoOk) { return false; }
 }
 
-  if (svc === 'cv_web'){
-    const bio = fs.querySelector('#bio_web');
-    if (!bio || !bio.value.trim()) return false;
-  }
-
-  if (svc === 'cv_clasico'){
+  if (svc === 'cv_clasico') {
     const sobreMi   = (fs.querySelector('#sobre_mi_clasico')?.value || '').trim();
     const exp       = (fs.querySelector('#experiencia_clasico')?.value || '').trim();
     const educacion = (fs.querySelector('#educacion_clasico')?.value || '').trim();
-    const fotoOk    = Array.from(fs.querySelectorAll('input[name="usarFoto"]')).some(r => r.checked);
-    if (!sobreMi || !exp || !educacion || !fotoOk) return false;
+    if (!sobreMi || !exp || !educacion || !fotoOkOrNotPresent) { return false; }
   }
 
   return true;
 }
 
-function validateStep1AndToggle(){
-  const ok = validateStep1();
-  if (toStep2) toStep2.disabled = !ok;
-}
+    function validateStep1AndToggle(){
+      if (toStep2) toStep2.disabled = !validateStep1();
+    }
 
-  // Paso 2: validación final
-function validateFinal(){
-  const nombre = wizard.querySelector('#nombre_final');
-  const email  = wizard.querySelector('#email');
+    function validateFinal(){
+      const nombre = Utils.qs('#nombre_final', wizard);
+      const email  = Utils.qs('#email', wizard);
+      const ok = Boolean(nombre && nombre.value.trim().length > 1 && email && email.value.trim() && email.checkValidity() && consent?.checked);
+      if (!ok && typeof wizard.querySelector('#pedidoForm')?.reportValidity === 'function')
+        wizard.querySelector('#pedidoForm').reportValidity();
+      if (!consent?.checked){ alert('Debés aceptar los Términos y Condiciones.'); return false; }
+      return ok;
+    }
 
-  const ok = Boolean(
-    nombre && nombre.value.trim().length > 1 &&
-    email  && email.value.trim() && email.checkValidity() &&
-    consent?.checked
-  );
+    function pruneUnselectedFields(form, activeFs) {
+      const GLOBAL_OK = new Set([
+  'servicio','estilo_elegido','nombre','email','whatsapp','consentimiento',
+  '_formStart','fileName','fileData','_captcha','_template','_subject','_next'
+]);
+      Utils.qsa('input[name], textarea[name], select[name]', form).forEach(el => {
+        const type = (el.type || '').toLowerCase();
+        const nm   = el.name || "";
+        if (nm.startsWith('_') && nm !== '_formStart') { el.removeAttribute('name'); return; }     // sólo meta _formStart
+        if (GLOBAL_OK.has(nm)) return;
+        if (type === 'file') return;
+        if (activeFs && activeFs.contains(el)) return;
+        el.removeAttribute('name');
+      });
+    }
 
-  if (!ok && typeof form.reportValidity === 'function') form.reportValidity();
-  if (!consent?.checked){ alert('Debés aceptar los Términos y Condiciones.'); return false; }
-  return ok;
-}
-// Habilita "Enviar" solo si nombre + email válidos + consentimiento
-function checkRequiredStep2(){
-  const nombre = wizard.querySelector('#nombre_final');
-  const email  = wizard.querySelector('#email');
-  const ready = Boolean(
-    nombre && nombre.value.trim().length > 1 &&
-    email  && email.value.trim() && email.checkValidity() &&
-    consent?.checked
-  );
-  if (submitBtn) submitBtn.disabled = !ready;
-}
+    function wireNav() {
+      // Radios de servicio
+      radiosServicio.forEach(r=>{
+        Utils.on(r, "change", ()=>{
+          clearStyleSelection();
+          hideAllContent();
+          renderStyleOptions(r.value);
+          bindActiveFotoGroup();
+          validateStep1AndToggle();
+          stylePicker?.scrollIntoView({ behavior:"smooth", block:"start" });
+        });
+      });
 
-// Escuchas en los campos obligatorios
-wizard.querySelector('#nombre_final')?.addEventListener('input', checkRequiredStep2);
-wizard.querySelector('#email')?.addEventListener('input', checkRequiredStep2);
-consent?.addEventListener('change', checkRequiredStep2);
+      // Inputs que disparan validación Paso 1
+      [
+  // CV REDES (si los usás)
+  '#headline_redes','#experiencia_redes','#habilidades_redes','#educacion_redes',
 
-// Estado inicial
-checkRequiredStep2();
+  // CV WEB (nuevos IDs)
+  '#headline_web','#sobre_mi_web','#experiencia_web','#educacion_web',
+  '#enlaces_web','#portfolio_web','#mensaje_web',
+  '#web_web','#idiomas_web','#premios_web','#competencias_web','#capacidades_web',
 
-  // Eventos de navegación
-  radiosServicio.forEach(r=>{
-    r.addEventListener('change', ()=>{
-      clearStyleSelection();
-      hideAllContent();
-      renderStyleOptions(r.value);
-      validateStep1AndToggle();
-      stylePicker?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-  });
-
-[
-  // Redes (obligatorios nuevos)
-  '#headline_redes',
-  '#experiencia_redes',
-  '#habilidades_redes',
-  '#educacion_redes',
-  // Web
-  '#bio_web','#proyectos_web','#links_web','#paleta_web',
-  // Clásico
+  // CV CLÁSICO
   '#sobre_mi_clasico','#experiencia_clasico','#educacion_clasico',
-  // Mensajes genéricos
   'textarea[id^="mensaje_"]'
-].forEach(sel=>{
-  const el = wizard.querySelector(sel);
-  if (el) el.addEventListener('input', validateStep1AndToggle);
+].forEach(sel => {
+  const el = Utils.qs(sel, wizard);
+  if (el) Utils.on(el, "input", validateStep1AndToggle);
 });
 
-// También escuchar la elección de “¿Querés foto en el CV?” (obligatoria)
-wizard.querySelectorAll('input[name="usarFoto"]').forEach(r=>{
-  r.addEventListener('change', validateStep1AndToggle);
-});
-
-toStep2?.addEventListener('click', ()=>{
-  if (!validateStep1()){
+      // Botones
+      Utils.on(toStep2, "click", () => {
+  if (!validateStep1()) {
     const svc = getService();
     const msg = (svc === 'cv_redes')
       ? 'Completá Titular, Experiencia (bullets), Habilidades (3–5 bullets), Educación (bullets) y “¿Querés foto en el CV?” para continuar.'
       : (svc === 'cv_clasico')
         ? 'Completá Sobre mí, Experiencia laboral, Educación y “¿Querés foto en el CV?” para continuar.'
-        : 'Completá los campos obligatorios del paso 1 para continuar.';
-    alert(msg);
-    return;
+        : (svc === 'cv_web')
+          ? 'Completá Titular, Sobre mí, Experiencia laboral, Educación y “¿Querés foto en el CV?” para continuar.'
+          : 'Completá los campos obligatorios del paso 1 para continuar.';
+    alert(msg); return;
   }
   showStep(2);
-  wizard.querySelector('#nombre_final')?.focus();
+  Utils.qs('#nombre_final', wizard)?.focus();
 });
+      Utils.on(backTo1, "click", () => showStep(1));
 
-backTo1?.addEventListener('click', ()=> showStep(1));
+      // Habilitar submit en paso 2
+      const checkRequiredStep2 = () => {
+        const nombre = Utils.qs('#nombre_final', wizard);
+        const email  = Utils.qs('#email', wizard);
+        const ready = Boolean(nombre && nombre.value.trim().length>1 && email && email.value.trim() && email.checkValidity() && consent?.checked);
+        if (submitBtn) submitBtn.disabled = !ready;
+      };
+      Utils.on(Utils.qs('#nombre_final', wizard), "input", checkRequiredStep2);
+      Utils.on(Utils.qs('#email', wizard),        "input", checkRequiredStep2);
+      Utils.on(consent, "change", checkRequiredStep2);
+      checkRequiredStep2();
 
-// Poda final (activo + globales). NO toca inputs file ni los hidden Base64.
-function pruneUnselectedFields(form, activeFs) {
-  const GLOBAL_OK = new Set([
-    'servicio',
-    'estilo_elegido',
-    'nombre',
-    'email',
-    'whatsapp',
-    'consentimiento',
-    '_formStart',
-    // Conservamos los hidden del adjunto en Base64:
-    'fileName',
-    'fileData'
-  ]);
+      // Submit: poda + normalización (texto)
+      Utils.on(form, "submit", (e) => {
+        if (!validateFinal()) { e.preventDefault(); return; }
+        const activeFs = Utils.qs('.svc-fields:not(.hidden)', wizard);
 
-  const all = form.querySelectorAll('input[name], textarea[name], select[name]');
-  all.forEach(el => {
-    const type = (el.type || '').toLowerCase();
-    const nm   = el.name;
+        // Validación de archivo si existiera (por si se saltó algo)
+        const filledInput = Utils.qsa('input[type="file"]', form).find(inp => inp.files && inp.files.length);
+        if (filledInput) {
+          const f = filledInput.files[0];
+          const ext = (f.name.split('.').pop()||'').toLowerCase();
+          if (!['pdf','doc','docx'].includes(ext)) { e.preventDefault(); alert('El CV debe ser PDF, DOC o DOCX.'); return; }
+          if (f.size > 5*1024*1024)                { e.preventDefault(); alert('El CV supera los 5 MB. Subí un archivo más liviano.'); return; }
+        }
 
-    // Permitimos meta solo _formStart
-    if (nm.startsWith('_') && nm !== '_formStart') {
-      el.removeAttribute('name');
-      return;
+        pruneUnselectedFields(form, activeFs);
+
+        const EXAMPLES = new Set(['titular','extracto','3–5 logros clave','habilidades / especialidades','no tengo','foto']);
+        Utils.qsa('input[name], textarea[name], select[name]', form).forEach(el => {
+          const type = (el.type || '').toLowerCase();
+          if (['file','radio','checkbox','hidden'].includes(type)) return;
+          if (el.name && el.name.startsWith('_')) return;
+          let val = (el.value || '').trim();
+          if (val === '' || EXAMPLES.has(val.toLowerCase())) { el.removeAttribute('name'); return; }
+          el.value = val.replace(/\s+/g, ' ').trim();
+        });
+      });
     }
 
-    // Conservamos globales siempre
-    if (GLOBAL_OK.has(nm)) return;
+    function cacheRefs(){
+      wizard       = Utils.qs('#pedido-wizard');
+      if (!wizard) return false;
+      form         = Utils.qs('#pedidoForm', wizard);
+      if (!form)   return false;
 
-    // No eliminar ni modificar inputs file (no viajan por name igualmente)
-    if (type === 'file') return;
+      progressFill  = Utils.qs('#progressFill', wizard);
+      progressLabel = Utils.qs('#progressLabel', wizard);
+      dots          = [Utils.qs('#dot1', wizard), Utils.qs('#dot2', wizard)].filter(Boolean);
 
-    // Si el campo pertenece al FS activo, lo conservamos
-    if (activeFs && activeFs.contains(el)) return;
+      step1   = Utils.qs('[data-step="1"]', wizard);
+      step2   = Utils.qs('[data-step="2"]', wizard);
+      toStep2 = Utils.qs('#toStep2', wizard);
+      backTo1 = Utils.qs('#backTo1', wizard);
+      submitBtn = Utils.qs('#submitBtn', wizard);
+      consent   = Utils.qs('#consentDatos', wizard);
 
-    // En cualquier otro caso, se poda
-    el.removeAttribute('name');
-  });
-}
+      radiosServicio = Utils.qsa('input[name="servicio"]', wizard);
+      svcGroups      = Utils.qsa('.svc-fields', wizard);
 
-  // Envío final
-  const EXAMPLES = new Set([
-    'titular','extracto','3–5 logros clave','habilidades / especialidades',
-    'no tengo','foto'
-  ]);
+      stylePicker = Utils.qs('#stylePicker', wizard);
+      styleGrid   = Utils.qs('#styleGrid', wizard);
+      estiloCard  = Utils.qs('#estiloCard', wizard);
 
-  const DEBUG_FORM = false;
-
-  if (DEBUG_FORM) {
-    try {
-      form.dataset._actionBackup = form.getAttribute('action') || '';
-      form.setAttribute('action', 'javascript:void(0)');
-    } catch {}
-  }
-
-  // ÚNICO listener de submit
-form.addEventListener('submit', (e) => {
-  const activeFs = document.querySelector('.svc-fields:not(.hidden)');
-
-  if (!DEBUG_FORM && !validateFinal()) {
-    e.preventDefault();
-    return;
-  }
-
-  // Detectar el file con contenido aunque el FS esté oculto en Paso 2
-  const filledFileInput = Array.from(form.querySelectorAll('input[type="file"]'))
-    .find(inp => inp.files && inp.files.length > 0) || null;
-
-  // Validación del archivo (si hay)
-  if (filledFileInput) {
-    const f = filledFileInput.files[0];
-    const ext = (f.name.split('.').pop() || '').toLowerCase();
-    if (!['pdf','doc','docx'].includes(ext)) {
-      e.preventDefault();
-      alert('El CV debe ser PDF, DOC o DOCX.');
-      return;
-    }
-    if (f.size > 5 * 1024 * 1024) {
-      e.preventDefault();
-      alert('El CV supera los 5 MB. Subí un archivo más liviano.');
-      return;
-    }
-  }
-
-  // Poda y normalización (pasando el file con contenido)
-  pruneUnselectedFields(form, activeFs);
-
-  const els = form.querySelectorAll('input[name], textarea[name], select[name]');
-  els.forEach(el => {
-    const type = (el.type || '').toLowerCase();
-    if (type === 'file' || type === 'radio' || type === 'checkbox') return;
-    if (type === 'hidden') return;
-    if (el.name && el.name.startsWith('_')) return;
-
-    let val = (el.value || '').trim();
-    if (val === '') { el.removeAttribute('name'); return; }
-    if (EXAMPLES.has(val.toLowerCase())) { el.removeAttribute('name'); return; }
-    el.value = val.replace(/\s+/g, ' ').trim();
-  });
-
-  if (DEBUG_FORM) {
-    e.preventDefault();
-    e.stopPropagation();
-    const fd = new FormData(form);
-    const summary = {};
-    for (const [k, v] of fd.entries()) {
-      summary[k] = (v instanceof File) ? (v.name ? { filename: v.name, size: v.size } : null) : v;
-    }
-    console.group('[DEBUG_FORM] Payload final a enviar');
-    console.table(summary);
-    console.log('Adjunto único:', summary.attachment || null);
-    console.groupEnd();
-    alert('DEBUG activo: el formulario NO se envió. Revisá la consola para ver el payload.');
-  } else {
-    if (!validateFinal()) {
-      e.preventDefault();
-      return;
-    }
-  }
-});
-
-  // Init
-  showStep(1);
-  if (toStep2) toStep2.disabled = true;
-  stylePicker?.classList.add('hidden');
-  hideAllContent();
-  renderStyleOptions(null);
-  wireGlobalFileListeners();
-  // === Helper robusto para mostrar nombre del archivo cargado ===
-function showFilePill(fileInput, file) {
-  // Deriva el id del "pill" a partir del id del input (cvfile_XYZ -> filePill_XYZ)
-  const pillId = fileInput.id.replace(/^cvfile_/, 'filePill_');
-  const errId  = fileInput.id.replace(/^cvfile_/, 'fileError_');
-  const pill   = document.getElementById(pillId);
-  const err    = document.getElementById(errId);
-
-  // Limpia errores
-  if (err) err.textContent = '';
-
-  if (!pill) return;
-  pill.hidden = false;
-  pill.style.color = '#1e7e34';
-  pill.innerHTML = `
-    ✅ <strong>${file.name}</strong> (${(file.size/1024/1024).toFixed(2)} MB)
-    <button type="button" class="removeFile" aria-label="Eliminar archivo" style="margin-left:.5rem">✕</button>
-  `;
-
-  const btn = pill.querySelector('.removeFile');
-  btn?.addEventListener('click', () => {
-    // borrar selección y ocultar pill
-    try { fileInput.value = ''; } catch {}
-    pill.hidden = true;
-    pill.innerHTML = '';
-    // si tenés la función, revalida el paso 1
-    if (typeof validateStep1AndToggle === 'function') validateStep1AndToggle();
-  });
-}
-
-// Valida extensión/tamaño y, si todo ok, muestra el pill y deja el file listo para submit
-function validateAssignAndShow(fileInput) {
-  const file = fileInput.files?.[0];
-  const errId = fileInput.id.replace(/^cvfile_/, 'fileError_');
-  const errEl = document.getElementById(errId);
-  const setErr = (msg) => { if (errEl) errEl.textContent = msg || ''; };
-
-  if (!file) { setErr(''); return; }
-
-  const ext = (file.name.split('.').pop() || '').toLowerCase();
-  if (!['pdf','doc','docx'].includes(ext)) {
-    setErr('Formato no válido. Subí PDF, DOC o DOCX.');
-    try { fileInput.value = ''; } catch {}
-    return;
-  }
-  if (file.size > 5 * 1024 * 1024) {
-    setErr('El archivo supera los 5 MB.');
-    try { fileInput.value = ''; } catch {}
-    return;
-  }
-
-  setErr('');
-  // Muestra el nombre/size como confirmación
-  showFilePill(fileInput, file);
-  if (typeof validateStep1AndToggle === 'function') validateStep1AndToggle();
-}
-
-// Listener global: captura cualquier cambio en inputs que empiecen con id="cvfile_"
-function wireGlobalFileListeners() {
-  // 1) Por si ya existen en el DOM (FS activo)
-  document.querySelectorAll('input[type="file"][id^="cvfile_"]').forEach(inp => {
-    // Evita listeners duplicados
-    inp.addEventListener('change', () => validateAssignAndShow(inp), { once: false });
-  });
-
-  // 2) Delegación: si más adelante se clonan/insertan (cuando cambia el servicio/estilo)
-  document.addEventListener('change', (e) => {
-    const t = e.target;
-    if (t && t.matches && t.matches('input[type="file"][id^="cvfile_"]')) {
-      validateAssignAndShow(t);
-    }
-  });
-
-  // 3) Drag & drop directo sobre cualquier .dropzone_* (asigna al input hermano)
-  document.addEventListener('drop', (e) => {
-    const dz = e.target.closest && e.target.closest('div[id^="dropzone_"]');
-    if (!dz) return;
-    e.preventDefault();
-    dz.classList.remove('dragover');
-    const fileInput = dz.querySelector('input[type="file"][id^="cvfile_"]');
-    const file = e.dataTransfer?.files?.[0];
-    if (fileInput && file) {
-      try {
-        const dt = new DataTransfer();
-        dt.items.add(file);
-        fileInput.files = dt.files; // deja el file listo para el submit
-      } catch {}
-      validateAssignAndShow(fileInput);
-    }
-  });
-
-  document.addEventListener('dragover', (e) => {
-    const dz = e.target.closest && e.target.closest('div[id^="dropzone_"]');
-    if (dz) { e.preventDefault(); dz.classList.add('dragover'); }
-  });
-  document.addEventListener('dragleave', (e) => {
-    const dz = e.target.closest && e.target.closest('div[id^="dropzone_"]');
-    if (dz) dz.classList.remove('dragover');
-  });
-}
-})();
-// === Subida Base64 integrada al form principal ===
-(function () {
-  const form = document.getElementById('pedidoForm');
-  if (!form) return;
-
-  const fName = document.getElementById('fileName');
-  const fData = document.getElementById('fileData');
-  const statusEl = document.getElementById('formStatus');
-  const submitBtn = document.getElementById('submitBtn');
-
-  function getActiveFileInput() {
-    const candidates = [
-      document.getElementById('cvfile_clasico'),
-      document.getElementById('cvfile_redes'),
-      document.getElementById('cvfile_web')
-    ].filter(Boolean);
-
-    for (const inp of candidates) {
-      const fs = inp.closest('.svc-fields');
-      const visible = fs && !fs.classList.contains('hidden');
-      if (visible && inp.files && inp.files.length) return inp;
-    }
-    return null;
-  }
-
-  function validateFile(file) {
-    const ext = (file.name.split('.').pop() || '').toLowerCase();
-    if (!['pdf','doc','docx'].includes(ext)) {
-      return 'El CV debe ser PDF, DOC o DOCX.';
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      return 'El CV supera los 5 MB. Subí un archivo más liviano.';
-    }
-    return '';
-  }
-
-  // Interceptamos el submit final (después de tus validaciones previas)
-  form.addEventListener('submit', (e) => {
-    // Si ya hay fileName/fileData cargados o no hay archivo, dejamos enviar tal cual
-    const fileInput = getActiveFileInput();
-    if (!fileInput) {
-      // Limpieza defensiva de hidden si no hay archivo
-      if (fName) fName.value = '';
-      if (fData) fData.value = '';
-      // Aseguramos urlencoded (por si el form venía con otro enctype)
-      form.setAttribute('enctype', 'application/x-www-form-urlencoded');
-      return;
+      return true;
     }
 
-    // Hay archivo: convertir a Base64 primero
-    const file = fileInput.files[0];
-    const err = validateFile(file);
-    if (err) {
-      e.preventDefault();
-      if (statusEl) statusEl.textContent = '⚠️ ' + err;
-      else alert(err);
-      return;
+    function init(){
+      if (!cacheRefs()) return;
+      // Timestamp informativo ISO
+      const startHidden = Utils.qs('#formStart', wizard);
+      if (startHidden) startHidden.value = new Date().toISOString();
+
+      showStep(1);
+      if (toStep2) toStep2.disabled = true;
+      stylePicker?.classList.add('hidden');
+      hideAllContent();
+      renderStyleOptions(null);
+      wireNav();
     }
 
-    e.preventDefault();
-    if (submitBtn) submitBtn.disabled = true;
-    if (statusEl) statusEl.textContent = `⏳ Subiendo ${file.name}...`;
+    // Exponer lo justo para FileUI
+    return { init, validateStep1AndToggle, setFieldsetActive, getActiveFs };
+  })();
 
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      try {
-        const dataUrl = String(ev.target.result || '');
-        const ix = dataUrl.indexOf(',');
-        if (ix < 0) throw new Error('DataURL inválido');
-        const base64 = dataUrl.slice(ix + 1);
 
-        if (fName) fName.value = file.name;
-        if (fData) fData.value = base64;
+  // =============================== [F] FileUI ===============================
+  const FileUI = (() => {
+    function showFilePill(fileInput, file) {
+      const pillId = fileInput.id.replace(/^cvfile_/, 'filePill_');
+      const errId  = fileInput.id.replace(/^cvfile_/, 'fileError_');
+      const pill   = document.getElementById(pillId);
+      const err    = document.getElementById(errId);
+      if (err) err.textContent = '';
+      if (!pill) return;
 
-        // Forzamos urlencoded (no multipart)
-        form.setAttribute('enctype', 'application/x-www-form-urlencoded');
+      pill.hidden = false;
+      pill.style.color = '#1e7e34';
+      pill.innerHTML = `✅ <strong>${file.name}</strong> (${(file.size/1024/1024).toFixed(2)} MB)
+                        <button type="button" class="removeFile" aria-label="Eliminar archivo" style="margin-left:.5rem">✕</button>`;
 
-        // Envío real
-        form.submit();
-      } catch (error) {
-        if (statusEl) statusEl.textContent = '❌ Error al preparar el archivo: ' + error.message;
-        if (submitBtn) submitBtn.disabled = false;
+      pill.querySelector('.removeFile')?.addEventListener('click', () => {
+        try { fileInput.value = ''; } catch {}
+        pill.hidden = true;
+        pill.innerHTML = '';
+        Wizard.validateStep1AndToggle?.();
+      });
+    }
+
+    function validateAssignAndShow(fileInput) {
+      const file = fileInput.files?.[0];
+      const errId = fileInput.id.replace(/^cvfile_/, 'fileError_');
+      const errEl = document.getElementById(errId);
+      const setErr = (msg) => { if (errEl) errEl.textContent = msg || ''; };
+
+      if (!file) { setErr(''); return; }
+      const ext = (file.name.split('.').pop()||'').toLowerCase();
+      if (!['pdf','doc','docx'].includes(ext)) { setErr('Formato no válido. Subí PDF, DOC o DOCX.'); try { fileInput.value=''; } catch{} return; }
+      if (file.size > 5*1024*1024)            { setErr('El archivo supera los 5 MB.');              try { fileInput.value=''; } catch{} return; }
+
+      setErr('');
+      showFilePill(fileInput, file);
+      Wizard.validateStep1AndToggle?.();
+    }
+
+    // Dropzone/file binding para un FS específico (idempotente)
+    function bindDropzone(fs) {
+      if (!fs) return;
+      const dropzone  = fs.querySelector('div[id^="dropzone_"]');
+      const fileInput = fs.querySelector('input[id^="cvfile_"]');
+      const fileError = fs.querySelector('div[id^="fileError_"]');
+      if (!dropzone || !fileInput) return;
+
+      fileInput.disabled = false;
+
+      if (!dropzone.dataset.bound) {
+        dropzone.addEventListener('click', () => fileInput.click());
+        dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragover'); });
+        dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+        dropzone.addEventListener('drop', e => {
+          e.preventDefault(); dropzone.classList.remove('dragover');
+          const f = e.dataTransfer?.files?.[0];
+          if (!f) return;
+          const okType = /(pdf|doc|docx)$/i.test((f.name.split('.').pop()||''));
+          const okSize = f.size <= 5*1024*1024;
+          fileError && (fileError.textContent = (!okType ? 'Formato no válido. ' : '') + (!okSize ? 'El archivo supera 5 MB.' : ''));
+          if (okType && okSize) {
+            try { const dt = new DataTransfer(); dt.items.add(f); fileInput.files = dt.files; } catch {}
+            showFilePill(fileInput, f);
+            Wizard.validateStep1AndToggle?.();
+          }
+        });
+        dropzone.dataset.bound = '1';
       }
-    };
-    reader.onerror = () => {
-      if (statusEl) statusEl.textContent = '❌ Error al leer el archivo.';
-      if (submitBtn) submitBtn.disabled = false;
-    };
-    reader.readAsDataURL(file);
+
+      if (!fileInput.dataset.bound) {
+        fileInput.addEventListener('change', () => validateAssignAndShow(fileInput));
+        fileInput.dataset.bound = '1';
+      }
+    }
+
+    // Listeners globales para cualquier input/drag&drop que aparezca
+    function wireGlobal() {
+      document.querySelectorAll('input[type="file"][id^="cvfile_"]').forEach(inp => {
+        inp.addEventListener('change', () => validateAssignAndShow(inp), { once:false });
+      });
+
+      document.addEventListener('change', (e) => {
+        const t = e.target;
+        if (t && t.matches && t.matches('input[type="file"][id^="cvfile_"]')) {
+          validateAssignAndShow(t);
+        }
+      });
+
+      document.addEventListener('drop', (e) => {
+        const dz = e.target.closest && e.target.closest('div[id^="dropzone_"]');
+        if (!dz) return;
+        e.preventDefault();
+        dz.classList.remove('dragover');
+        const fileInput = dz.querySelector('input[type="file"][id^="cvfile_"]');
+        const file = e.dataTransfer?.files?.[0];
+        if (fileInput && file) {
+          try { const dt = new DataTransfer(); dt.items.add(file); fileInput.files = dt.files; } catch {}
+          validateAssignAndShow(fileInput);
+        }
+      });
+      document.addEventListener('dragover', (e) => {
+        const dz = e.target.closest && e.target.closest('div[id^="dropzone_"]');
+        if (dz) { e.preventDefault(); dz.classList.add('dragover'); }
+      });
+      document.addEventListener('dragleave', (e) => {
+        const dz = e.target.closest && e.target.closest('div[id^="dropzone_"]');
+        if (dz) dz.classList.remove('dragover');
+      });
+    }
+
+    function init(){ wireGlobal(); }
+
+    return { init, bindDropzone, showFilePill };
+  })();
+
+
+  // ============================= [G] FileBase64 ============================
+  const FileBase64 = (() => {
+    function getActiveFileInput() {
+      const candidates = [
+        document.getElementById('cvfile_clasico'),
+        document.getElementById('cvfile_redes'),
+        document.getElementById('cvfile_web')
+      ].filter(Boolean);
+      for (const inp of candidates) {
+        const fs = inp.closest('.svc-fields');
+        const visible = fs && !fs.classList.contains('hidden');
+        if (visible && inp.files && inp.files.length) return inp;
+      }
+      return null;
+    }
+
+    function validateFile(file) {
+      const ext = (file.name.split('.').pop() || '').toLowerCase();
+      if (!['pdf','doc','docx'].includes(ext)) return 'El CV debe ser PDF, DOC o DOCX.';
+      if (file.size > 5 * 1024 * 1024)        return 'El CV supera los 5 MB. Subí un archivo más liviano.';
+      return '';
+    }
+
+    function init(){
+      const form = document.getElementById('pedidoForm');
+      if (!form) return;
+
+      const fName = document.getElementById('fileName');
+      const fData = document.getElementById('fileData');
+      const statusEl = document.getElementById('formStatus');
+      const submitBtn = document.getElementById('submitBtn');
+
+      form.addEventListener('submit', (e) => {
+        const active = getActiveFileInput();
+        if (!active) {
+          if (fName) fName.value = '';
+          if (fData) fData.value = '';
+          form.setAttribute('enctype','application/x-www-form-urlencoded');
+          return;
+        }
+
+        const file = active.files[0];
+        const err = validateFile(file);
+        if (err) {
+          e.preventDefault();
+          if (statusEl) statusEl.textContent = '⚠️ ' + err; else alert(err);
+          return;
+        }
+
+        e.preventDefault();
+        submitBtn && (submitBtn.disabled = true);
+        statusEl && (statusEl.textContent = `⏳ Subiendo ${file.name}...`);
+
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try {
+            const dataUrl = String(ev.target.result || '');
+            const ix = dataUrl.indexOf(',');
+            if (ix < 0) throw new Error('DataURL inválido');
+            const base64 = dataUrl.slice(ix + 1);
+            if (fName) fName.value = file.name;
+            if (fData) fData.value = base64;
+            form.setAttribute('enctype','application/x-www-form-urlencoded');
+            form.submit();
+          } catch (error) {
+            statusEl && (statusEl.textContent = '❌ Error al preparar el archivo: ' + error.message);
+            submitBtn && (submitBtn.disabled = false);
+          }
+        };
+        reader.onerror = () => {
+          statusEl && (statusEl.textContent = '❌ Error al leer el archivo.');
+          submitBtn && (submitBtn.disabled = false);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    return { init };
+  })();
+
+
+  // ============================= [H] Bootstrap =============================
+  (function initAll() {
+    Slider.init();
+    FormBasic.init();
+    Fullscreen.init();
+    Wizard.init();
+    FileUI.init();
+    FileBase64.init();
+  })();
+  
+    // ============================= [I] SLOTS =============================
+  (function() {
+  const AVAIL_URL = 'https://script.google.com/macros/s/AKfycbyGn_3g2Z3TWvNEW0uWBF-Ez_xLvkZTjp2gu1QeH3ks25TKalFpdyV3CpdwUybaiz9o/exec?action=availability&t=' + Date.now();
+
+  const slotEls = {
+    cv_clasico: document.getElementById('slots_clasico'),
+    cv_redes:   document.getElementById('slots_redes'),
+    cv_web:     document.getElementById('slots_web')
+  };
+
+  const radios = {
+    cv_clasico: document.querySelector('input[type="radio"][name="servicio"][value="cv_clasico"]'),
+    cv_redes:   document.querySelector('input[type="radio"][name="servicio"][value="cv_redes"]'),
+    cv_web:     document.querySelector('input[type="radio"][name="servicio"][value="cv_web"]')
+  };
+
+  function markSoldOut(svc) {
+    const label = radios[svc]?.closest('.svc');
+    if (label) label.classList.add('soldout');
+  }
+
+  function setSlots(svc, n) {
+    if (slotEls[svc]) slotEls[svc].textContent = n;
+    if (radios[svc]) {
+      radios[svc].disabled = (n <= 0);
+      if (n <= 0) markSoldOut(svc);
+    }
+  }
+
+  // bloqueá paso si el servicio elegido está agotado
+  const nextBtn = document.getElementById('toStep2');
+  nextBtn?.addEventListener('click', () => {
+    const sel = document.querySelector('input[name="servicio"]:checked');
+    if (!sel) return;
+    const svc = sel.value;
+    const span = slotEls[svc];
+    const remain = span ? parseInt(span.textContent, 10) : NaN;
+    if (!isFinite(remain)) return;
+    if (remain <= 0) {
+      alert('El cupo semanal de este servicio está agotado. Por favor elegí otro o volvé la próxima semana. ¡Gracias!');
+      // opcional: des-seleccionar
+      sel.checked = false;
+    }
   });
+
+  // Cargar al entrar
+  fetch(AVAIL_URL, { method: 'GET', mode: 'cors', cache: 'no-store' })
+    .then(r => r.json())
+    .then(data => {
+      if (!data || !data.ok) throw new Error('Respuesta inválida');
+      const rem = data.remaining || {};
+      setSlots('cv_clasico', rem.cv_clasico ?? '—');
+      setSlots('cv_redes',   rem.cv_redes   ?? '—');
+      setSlots('cv_web',     rem.cv_web     ?? '—');
+    })
+    .catch(() => {
+      // si falla, dejamos los guiones y no deshabilitamos nada
+      setSlots('cv_clasico', '—');
+      setSlots('cv_redes',   '—');
+      setSlots('cv_web',     '—');
+    });
 })();
 });
