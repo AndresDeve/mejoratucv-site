@@ -235,6 +235,7 @@ figcaption { margin-top: .6rem; font-size: .9rem; opacity: .8; }
   padding:.2rem .5rem; border:2px solid #FFD54F; border-radius:.3rem; font-size:.9rem;
   text-transform:uppercase; letter-spacing:.5px;
 }
+
 .old-price { font-family:'Inter', sans-serif; text-decoration:line-through; color:#ccc; margin-right:.5rem; font-size:1rem; font-weight:200; }
 .new-price { font-family:'Inter', sans-serif; color:#FFD700; font-size:2rem; font-weight:200; }
 .price-box .new-price{
