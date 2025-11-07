@@ -219,9 +219,16 @@ figcaption { margin-top: .6rem; font-size: .9rem; opacity: .8; }
 /* == [6] PRICE-BOX == */
 
 /* Caja de precios usada en cada card de servicio */
-.price-box {
-  display:flex; flex-direction:column; align-items:center; gap:.3rem;
-  background:transparent; border:none; box-shadow:none; margin-top:1.5rem;
+.price-box{
+  display:flex;
+  flex-wrap:wrap;           
+  align-items:baseline;     
+  column-gap:.5rem;
+  row-gap:.25rem;
+  background:transparent;
+  border:none;
+  box-shadow:none;
+  margin-top:1.5rem;
 }
 .offer-label {
   background:transparent; color:#FFE00F; font-family:'Montserrat', sans-serif; font-weight:700;
@@ -230,6 +237,9 @@ figcaption { margin-top: .6rem; font-size: .9rem; opacity: .8; }
 }
 .old-price { font-family:'Inter', sans-serif; text-decoration:line-through; color:#ccc; margin-right:.5rem; font-size:1rem; font-weight:200; }
 .new-price { font-family:'Inter', sans-serif; color:#FFD700; font-size:2rem; font-weight:200; }
+.price-box .new-price{
+  flex:0 0 100%;            /* salta a la línea siguiente y ocupa todo el ancho */
+}
 
 /* ========================================================*/
 /* == [7] WORKFLOW == */

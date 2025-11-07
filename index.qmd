@@ -1,7 +1,13 @@
 ---
 image: assets/portada.png
-page-layout: full
-css: styles.css
+pagetitle: "MejoráTuCV"
+format:
+  html:
+    page-layout: full
+    css: styles.css
+    include-in-header:
+      text: |
+        <link rel="icon" href="assets/logo_icon.png" type="image/png">
 ---
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
@@ -55,10 +61,9 @@ btnShare?.addEventListener('click', (e) => {
 <div class="services-grid">
 
 ::: {.card}
-#### `CV Clásico`
+### `CV Clásico`
 <p>
   Diseños modernos y optimizados para <strong>imprimir y compartir en alta calidad</strong>.<br>
-  <span class="format-note">(Formato de entrega: PDF en alta calidad)</span>
 </p>
 
 
@@ -75,10 +80,10 @@ btnShare?.addEventListener('click', (e) => {
 ![](assets/CV_favaloro.png){alt="Ejemplo CV 2" tabindex="0" role="button"}
 :::
 ::: {.slide}
-![](assets/CV_houssay.png){alt="Ejemplo CV 2" tabindex="0" role="button"}
+![](assets/CV_houssay.png){alt="Ejemplo CV 3" tabindex="0" role="button"}
 :::
 ::: {.slide}
-![](assets/CV_sparrow.png){alt="Ejemplo CV 3" tabindex="0" role="button"}
+![](assets/CV_sparrow.png){alt="Ejemplo CV 4" tabindex="0" role="button"}
 :::
 :::
 
@@ -87,19 +92,17 @@ btnShare?.addEventListener('click', (e) => {
 :::
 :::
 
-<div class="price-box">
-  <span class="offer-label">30% OFF</span>
-  <span class="old-price">$40.000 ARS</span>
-  <span class="new-price">$28.000 ARS</span>
-</div>
+<p>
+  <span class="format-note">Formato de entrega: PDF en alta calidad ideal para impresión o adjuntar online</span>
+</p>
+
 :::
 
 ::: {.card}
-#### `CV Redes`
+### `CV Redes`
 <p>
   Diseños minimalistas y optimizados para compartir desde tu <strong>celular</strong>, 
   <strong>computadora</strong> o <strong>tablet</strong>.<br>
-  <span class="format-note">(Formato de entrega: PNG en alta calidad)</span>
 </p>
 
 :::{.slider #gallery-digital}
@@ -121,19 +124,17 @@ btnShare?.addEventListener('click', (e) => {
 :::
 :::
 
-<div class="price-box">
-  <span class="offer-label">25% OFF</span>
-  <span class="old-price">$30.000 ARS</span>
-  <span class="new-price">$22.500 ARS</span>
-</div>
+<p>
+  <span class="format-note">Formato de entrega: PNG en alta calidad ideal para compartir por whatsapp y redes</span>
+</p>
+
 :::
 
 ::: {.card}
-#### `CV Web`
+### `CV Web`
 <p>
   Un <strong>sitio web personal</strong> para mostrar tu <strong>CV</strong>, 
   <strong>proyectos</strong> y <strong>portfolio</strong>.<br>
-  <span class="format-note">(Entrega: sitio web personalizado)</span>
 </p>
 
 ```{=html}
@@ -165,13 +166,9 @@ btnShare?.addEventListener('click', (e) => {
   <button class="slider-btn next" aria-label="Siguiente">›</button>
 </div>
 ```
+<div style="height:1rem;"></div>
+<p><span class="format-note">Formato de entrega: sitio web con URL propia (subdominio), optimizado para móvil, SEO básico y analíticas.</span></p>
 
-
-<div class="price-box">
-  <span class="offer-label">20% OFF</span>
-  <span class="old-price">$100.000 ARS</span>
-  <span class="new-price">$80.000 ARS</span>
-</div>
 :::
 
 </div>
@@ -259,8 +256,20 @@ Recibirás la versión final de tu CV por mail.
       <input type="radio" name="servicio" value="cv_clasico" required>
       <div class="svc-body">
         <h2>CV Clásico (PDF)</h2>
-        <p>Para imprimir y compartir en alta calidad.</p>
-        <div class="price"><span class="off">30% OFF</span> $28.000</div>
+        <img
+  src="assets/CV_Maradona.png"
+  alt="Ejemplo CV 1"
+  data-full="assets/CV_Maradona_full.png"
+  tabindex="0"
+  role="button"
+  loading="lazy"
+  style="max-width:100%; height:auto; padding:15px;"
+>
+        <div class="price-box">
+  <span class="offer-label">30% OFF</span>
+  <span class="old-price">$40.000 ARS</span>
+  <span class="new-price">$28.000 ARS</span>
+</div>
         <div class="highlight-text2" data-svc="cv_clasico">
   <span class="slots-label"><strong><span id="slots_clasico">—</span></strong> pedidos disponibles esta semana</span>
 </div>
@@ -270,8 +279,20 @@ Recibirás la versión final de tu CV por mail.
       <input type="radio" name="servicio" value="cv_redes" required>
       <div class="svc-body">
         <h2>CV Redes (PNG)</h2>
-        <p>Versión sintética para compartir por redes.</p>
-        <div class="price"><span class="off">25% OFF</span> $22.500</div>
+        <img
+  src="assets/CV_Digital_Maradona.png"
+  alt="Ejemplo CV 1"
+  data-full="assets/CV_Digital_Maradona.png"
+  tabindex="0"
+  role="button"
+  loading="lazy"
+  style="max-width:100%; height:auto; padding:15px;"
+>
+        <div class="price-box">
+  <span class="offer-label">25% OFF</span>
+  <span class="old-price">$30.000 ARS</span>
+  <span class="new-price">$22.500 ARS</span>
+</div>
         <div class="highlight-text2" data-svc="cv_redes">
   <span class="slots-label"><strong><span id="slots_redes">—</span></strong> pedidos disponibles esta semana</span>
 </div>
@@ -281,8 +302,20 @@ Recibirás la versión final de tu CV por mail.
       <input type="radio" name="servicio" value="cv_web" required>
       <div class="svc-body">
         <h2>CV Web (Sitio)</h2>
-        <p>Sitio personal con proyectos y portfolio.</p>
-        <div class="price"><span class="off">20% OFF</span> $80.000</div>
+        <img
+  src="assets/CV_Web_Maradona_preview.png"
+  alt="Ejemplo CV 1"
+  data-full="assets/CV_Web_Maradona_preview.png"
+  tabindex="0"
+  role="button"
+  loading="lazy"
+  style="display:block; margin:0 auto; max-width:50%; height:auto; padding:15px;"
+>
+        <div class="price-box">
+  <span class="offer-label">20% OFF</span>
+  <span class="old-price">$100.000 ARS</span>
+  <span class="new-price">$80.000 ARS</span>
+</div>
         <div class="highlight-text2" data-svc="cv_web">
   <span class="slots-label"><strong><span id="slots_web">—</span></strong> pedido disponible esta semana ️</span>
 </div>
